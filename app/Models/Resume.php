@@ -44,4 +44,8 @@ class Resume extends Model
     {
         return $this->hasMany(ResumeLanguage::class);
     }
+
+    public function workPost(){
+        return $this->belongsTo(WorkPost::class);
+    }
 }

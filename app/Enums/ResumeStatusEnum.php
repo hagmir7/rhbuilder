@@ -9,8 +9,8 @@ enum ResumeStatusEnum: int
     case NEW = 1;
     case INVITATION = 2;
     case EVALUATION = 3;
-    case ACCEPTED = 3;
-    case ENGAGED = 4;
+    case ACCEPTED = 4;
+    case ENGAGED = 5;
 
     public function getLable(): string
     {
