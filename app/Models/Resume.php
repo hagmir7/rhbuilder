@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ResumeMaritalStatusEnum;
+use App\Enums\ResumeStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Resume extends Model
@@ -9,7 +11,13 @@ class Resume extends Model
     protected $fillable = [
         'first_name', 'last_name', 'email', 'phone', 
         'address', 'city_id', 'level', 'status', 'user_id',
-        'cv_file', 'cover_letter_file', 'work_post_id'
+        'cv_file', 'cover_letter_file', 'work_post_id', 'marital_status'
+    ];
+
+
+    protected $casts = [
+        'marital_status' => ResumeMaritalStatusEnum::class,
+        'status' => ResumeStatusEnum::class
     ];
 
     public function city()
