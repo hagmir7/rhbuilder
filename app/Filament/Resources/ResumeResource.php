@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Wizard;
+use Filament\Forms\Components\Actions\Action;
 
 
 
@@ -25,7 +26,12 @@ class ResumeResource extends Resource
 {
     protected static ?string $model = Resume::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    public static function getModelLabel(): string
+    {
+        return __("CV");
+    }
 
     public static function form(Form $form): Form
     {
@@ -108,7 +114,7 @@ class ResumeResource extends Resource
                                         ->required(),
                                 ])->columns(4)
                         ]),
-                        Wizard\Step::make('Compétences')
+                    Wizard\Step::make('Compétences')
                         ->schema([
                             Forms\Components\Select::make('skills')
                                 ->relationship('skills', 'name')
@@ -117,16 +123,21 @@ class ResumeResource extends Resource
 
                             Forms\Components\Repeater::make('languages')
                                 ->relationship('languages')
-                                ->simple(
+                                ->schema([
                                     Forms\Components\Select::make('language_id')
+                                        ->required()
                                         ->relationship('language', 'name'),
                                     Forms\Components\Select::make('level')
+                                        ->required()
                                         ->options(LanguageLevelEnum::toArray())
-                                )
-                            ])
-
-                 
-                ])->columnSpanFull()
+                                ])->grid(2)
+                        ])
+                ])
+                ->persistStepInQueryString()
+                ->nextAction(
+                    fn (Action $action) => $action->label(__("Prochaine")),
+                )
+                ->columnSpanFull()
             ]);
     }
 
