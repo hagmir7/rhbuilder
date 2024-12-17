@@ -43,35 +43,44 @@ class ResumeResource extends Resource
                             Forms\Components\Section::make()
                                 ->schema([
                                     Forms\Components\TextInput::make('first_name')
+                                        ->label(__("Prénom"))
                                         ->required()
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('last_name')
+                                        ->label(__("Nom"))
                                         ->required()
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('email')
+                                        ->label(__("E-mail"))
                                         ->email()
                                         ->unique(ignoreRecord: true)
                                         ->required()
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('phone')
+                                        ->label(__("Téléphone"))
                                         ->tel()
                                         ->maxLength(255),
                                     Forms\Components\Select::make('marital_status')
+                                        ->label(__("État civil"))
                                         ->options(ResumeMaritalStatusEnum::toArray()),
                                     Forms\Components\Select::make('city_id')
+                                        ->label(__("Ville"))
                                         ->preload()
                                         ->searchable()
                                         ->relationship('city', 'name'),
                                     Forms\Components\Textarea::make('address')
+                                        ->label(__("Adresse"))
                                         ->rows(3),
                                     // Forms\Components\Select::make('company_work_post_id')
                                     //     ->searchable()
                                     //     ->relationship('workPost', 'name'),
                                     Forms\Components\FileUpload::make('cv_file')
+                                        ->label(__("Fichier de CV"))
                                         ->downloadable()
                                         ->acceptedFileTypes(['application/pdf'])
                                         ->maxSize(10024),
                                     Forms\Components\FileUpload::make('cover_letter_file')
+                                        ->label(__("Lettre de motivation"))
                                         ->downloadable()
                                         ->acceptedFileTypes(['application/pdf']),
                                 ])->columns(3)
@@ -85,15 +94,18 @@ class ResumeResource extends Resource
                                     Forms\Components\Select::make('level_id')
                                         ->options(Level::all()->pluck('name', 'id'))
                                         ->preload()
+                                        ->label(__("Niveau"))
                                         ->searchable()
                                         ->required(),
                                     Forms\Components\TextInput::make('name')
+                                        ->label(__("Diplôme"))
                                         ->required(),
-
                                     Forms\Components\DatePicker::make('start_date')
+                                        ->label(__("Début"))
                                         ->native(false)
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
+                                        ->label(__("Fin"))
                                         ->native(false)
                                         ->required(),
 
@@ -105,29 +117,37 @@ class ResumeResource extends Resource
                                 ->relationship()
                                 ->schema([
                                     Forms\Components\TextInput::make('company')
+                                        ->label(__("Entreprise"))
                                         ->required(),
                                     Forms\Components\TextInput::make('work_post')
+                                        ->label(__("Post de travail"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('start_date')
+                                        ->label(__("Début"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
+                                        ->label(__("Fin"))
                                         ->required(),
                                 ])->columns(4)
                         ]),
                     Wizard\Step::make('Compétences')
                         ->schema([
                             Forms\Components\Select::make('skills')
+                                ->label(__("Compétences"))
                                 ->relationship('skills', 'name')
                                 ->multiple()
                                 ->preload(),
 
                             Forms\Components\Repeater::make('languages')
+                                ->label(__("Langues"))
                                 ->relationship('languages')
                                 ->schema([
                                     Forms\Components\Select::make('language_id')
+                                        ->label(__("Langue"))
                                         ->required()
                                         ->relationship('language', 'name'),
                                     Forms\Components\Select::make('level')
+                                        ->label(__("Niveau"))
                                         ->required()
                                         ->options(LanguageLevelEnum::toArray())
                                 ])->grid(2)
