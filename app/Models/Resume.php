@@ -11,7 +11,7 @@ class Resume extends Model
     protected $fillable = [
         'first_name', 'last_name', 'email', 'phone', 
         'address', 'city_id', 'level', 'status', 'user_id',
-        'cv_file', 'cover_letter_file', 'work_post_id', 'marital_status'
+        'cv_file', 'cover_letter_file', 'company_work_post_id', 'marital_status'
     ];
 
 
@@ -35,17 +35,19 @@ class Resume extends Model
         return $this->hasMany(Experience::class);
     }
 
+
     public function skills()
     {
-        return $this->hasMany(ResumeSkill::class);
+        return $this->belongsToMany(Skill::class, 'resume_skills');
     }
 
     public function languages()
     {
         return $this->hasMany(ResumeLanguage::class);
     }
+    
 
     public function workPost(){
-        return $this->belongsTo(WorkPost::class);
+        return $this->belongsTo(CompanyWorkPost::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Company;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('work_posts', function (Blueprint $table) {
+        Schema::create('company_work_posts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('company_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId(Company::class);
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('work_posts');
+        Schema::dropIfExists('company_work_posts');
     }
 };

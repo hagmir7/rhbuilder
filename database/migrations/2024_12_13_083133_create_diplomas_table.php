@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->foreignId('level_id')->constrained()->onDelete('cascade');
-            $table->string('institution');
+            $table->string('institution')->nullable();
             $table->boolean('private')->default(false);
             $table->timestamps();
         });

@@ -12,4 +12,5 @@ class Skill extends Model
     {
         return $this->hasMany(ResumeSkill::class);
     }
+    
 }

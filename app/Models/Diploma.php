@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Diploma extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'start_date', 'end_date', 
-        'type', 'institution', 'private'
+        'resume_id', 'name', 'start_date', 'end_date', 'institution', 'private', 'level_id'
     ];
 
 
@@ -18,7 +17,8 @@ class Diploma extends Model
     }
 
 
-    public function level(){
+    public function level()
+    {
         return $this->belongsTo(Level::class);
     }
 }
