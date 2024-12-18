@@ -7,8 +7,10 @@ use App\Enums\ResumeMaritalStatusEnum;
 use App\Enums\ResumeStatusEnum;
 use App\Filament\Resources\ResumeResource\Pages;
 use App\Filament\Resources\ResumeResource\RelationManagers;
+use App\Models\City;
 use App\Models\Level;
 use App\Models\Resume;
+use App\Models\Skill;
 use App\Models\WorkPost;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,8 +21,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Actions\Action;
-
-
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 
 class ResumeResource extends Resource
 {
@@ -42,14 +44,15 @@ class ResumeResource extends Resource
                         ->schema([
                             Forms\Components\Section::make()
                                 ->schema([
-                                    Forms\Components\TextInput::make('first_name')
-                                        ->label(__("Prénom"))
-                                        ->required()
-                                        ->maxLength(255),
                                     Forms\Components\TextInput::make('last_name')
                                         ->label(__("Nom"))
                                         ->required()
                                         ->maxLength(255),
+                                    Forms\Components\TextInput::make('first_name')
+                                        ->label(__("Prénom"))
+                                        ->required()
+                                        ->maxLength(255),
+
                                     Forms\Components\TextInput::make('email')
                                         ->label(__("E-mail"))
                                         ->email()
@@ -57,6 +60,7 @@ class ResumeResource extends Resource
                                         ->required()
                                         ->maxLength(255),
                                     Forms\Components\TextInput::make('phone')
+                                        ->required()
                                         ->label(__("Téléphone"))
                                         ->tel()
                                         ->maxLength(255),
@@ -101,12 +105,12 @@ class ResumeResource extends Resource
                                         ->label(__("Diplôme"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('start_date')
+                                        ->format('d/m/Y')
                                         ->label(__("Début"))
-                                        ->native(false)
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
+                                        ->format('d/m/Y')
                                         ->label(__("Fin"))
-                                        ->native(false)
                                         ->required(),
 
                                 ])->columns(2)
@@ -123,9 +127,11 @@ class ResumeResource extends Resource
                                         ->label(__("Post de travail"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('start_date')
+                                        ->format('d/m/Y')
                                         ->label(__("Début"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
+                                        ->format('d/m/Y')
                                         ->label(__("Fin"))
                                         ->required(),
                                 ])->columns(4)
@@ -153,11 +159,11 @@ class ResumeResource extends Resource
                                 ])->grid(2)
                         ])
                 ])
-                ->persistStepInQueryString()
-                ->nextAction(
-                    fn (Action $action) => $action->label(__("Prochaine")),
-                )
-                ->columnSpanFull()
+                    ->persistStepInQueryString()
+                    ->nextAction(
+                        fn(Action $action) => $action->label(__("Prochaine")),
+                    )
+                    ->columnSpanFull()
             ]);
     }
 
@@ -179,6 +185,7 @@ class ResumeResource extends Resource
                     ->label(__("Ville"))
                     ->sortable(),
                 Tables\Columns\SelectColumn::make('status')
+                    ->label(__("État"))
                     ->options(ResumeStatusEnum::toArray()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -190,8 +197,55 @@ class ResumeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                // Filter::make('Nouveau')->query(function($query){
+                //     return $query->where("status", 1);
+                // }),
+
+                // Filter::make('Invetaion')->query(function($query){
+                //     return $query->where("status", 2);
+                // }),
+
+                SelectFilter::make('status')
+                    ->label(__("État"))
+                    ->searchable()
+                    ->options(ResumeStatusEnum::toArray()),
+
+                SelectFilter::make('marital_status')
+                    ->searchable()
+                    ->label(__("État civil"))
+                    ->options(ResumeMaritalStatusEnum::toArray()),
+
+                SelectFilter::make('city_id')
+                    ->label(__("Ville"))
+                    ->multiple()
+                    ->preload()
+                    ->relationship('city', 'name'),
+
+                SelectFilter::make('skills')
+                    ->form([
+                        Forms\Components\Select::make('skill')
+                            ->multiple()
+                            ->searchable()
+                            ->options(Skill::all()->pluck('name', 'id')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(!empty($data['skill']), function (Builder $query) use ($data) {
+                            return $query->whereHas('skills', function ($q) use ($data) {
+                                $q->whereIn('skills.id', $data['skill']);
+                            });
+                        });
+                    }),
+                SelectFilter::make('experience')
+                    ->form([
+                        Forms\Components\TextInput::make('experience')
+                            ->numeric(),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->get()->filter(function ($resume) use ($data) {
+                            $resume->getExperience() == intval($data['experience']);
+                        });
+                    })
+            ])->filtersFormColumns(3)
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

@@ -5,13 +5,25 @@ namespace App\Models;
 use App\Enums\ResumeMaritalStatusEnum;
 use App\Enums\ResumeStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Resume extends Model
 {
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'phone', 
-        'address', 'city_id', 'level', 'status', 'user_id',
-        'cv_file', 'cover_letter_file', 'company_work_post_id', 'marital_status'
+        'first_name',
+        'last_name',
+        'email',
+        'phone',
+        'address',
+        'city_id',
+        'level',
+        'status',
+        'user_id',
+        'cv_file',
+        'cover_letter_file',
+        'company_work_post_id',
+        'marital_status',
+        'experience_monthe'
     ];
 
 
@@ -45,9 +57,49 @@ class Resume extends Model
     {
         return $this->hasMany(ResumeLanguage::class);
     }
-    
 
-    public function workPost(){
+
+    public function workPost()
+    {
         return $this->belongsTo(CompanyWorkPost::class);
     }
+
+    function daysToMonths($days) {
+        $daysPerMonth = 30.44;
+        return $days / $daysPerMonth;
+    }
+    
+    public function getExperience() :int
+    {
+        $totalDays = 0;
+        
+        foreach ($this->experiences as $experience) {
+            $startDate = Carbon::parse($experience->start_date);
+            $endDate = Carbon::parse($experience->end_date);
+    
+            $daysDifference = $startDate->diffInDays($endDate);
+            
+            
+            $totalDays += $daysDifference;
+            echo "Start date ". $startDate->locale('fr')->format('d-m-Y') . "\n";
+            echo "End date ". $startDate->locale('fr')->format('d-m-Y') . "\n";
+            echo "Difference days " . $daysDifference  . "\n";
+        }
+       
+        return round($this->daysToMonths($totalDays), 0);
+    }
+    
+    protected static function booted()
+    {
+        static::created(function ($resume) {  // Trigger when a new record is created
+            $resume->experience_monthe = $resume->getExperience();
+            $resume->save();
+        });
+    
+        static::updated(function ($resume) {  // Trigger when an existing record is updated
+            $resume->experience_monthe = $resume->getExperience();
+            $resume->save();
+        });
+    }
+    
 }
