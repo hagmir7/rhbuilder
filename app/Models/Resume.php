@@ -81,11 +81,7 @@ class Resume extends Model
             
             
             $totalDays += $daysDifference;
-            echo "Start date ". $startDate->locale('fr')->format('d-m-Y') . "\n";
-            echo "End date ". $startDate->locale('fr')->format('d-m-Y') . "\n";
-            echo "Difference days " . $daysDifference  . "\n";
         }
-       
         return round($this->daysToMonths($totalDays), 0);
     }
     

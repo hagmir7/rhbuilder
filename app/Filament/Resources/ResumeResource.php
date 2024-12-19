@@ -42,53 +42,50 @@ class ResumeResource extends Resource
                 Wizard::make([
                     Wizard\Step::make('Person')
                         ->schema([
-                            Forms\Components\Section::make()
-                                ->schema([
-                                    Forms\Components\TextInput::make('last_name')
-                                        ->label(__("Nom"))
-                                        ->required()
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('first_name')
-                                        ->label(__("Prénom"))
-                                        ->required()
-                                        ->maxLength(255),
+                            Forms\Components\TextInput::make('last_name')
+                                ->label(__("Nom"))
+                                ->required()
+                                ->maxLength(255),
+                            Forms\Components\TextInput::make('first_name')
+                                ->label(__("Prénom"))
+                                ->required()
+                                ->maxLength(255),
 
-                                    Forms\Components\TextInput::make('email')
-                                        ->label(__("E-mail"))
-                                        ->email()
-                                        ->unique(ignoreRecord: true)
-                                        ->required()
-                                        ->maxLength(255),
-                                    Forms\Components\TextInput::make('phone')
-                                        ->required()
-                                        ->label(__("Téléphone"))
-                                        ->tel()
-                                        ->maxLength(255),
-                                    Forms\Components\Select::make('marital_status')
-                                        ->label(__("État civil"))
-                                        ->options(ResumeMaritalStatusEnum::toArray()),
-                                    Forms\Components\Select::make('city_id')
-                                        ->label(__("Ville"))
-                                        ->preload()
-                                        ->searchable()
-                                        ->relationship('city', 'name'),
-                                    Forms\Components\Textarea::make('address')
-                                        ->label(__("Adresse"))
-                                        ->rows(3),
-                                    // Forms\Components\Select::make('company_work_post_id')
-                                    //     ->searchable()
-                                    //     ->relationship('workPost', 'name'),
-                                    Forms\Components\FileUpload::make('cv_file')
-                                        ->label(__("Fichier de CV"))
-                                        ->downloadable()
-                                        ->acceptedFileTypes(['application/pdf'])
-                                        ->maxSize(10024),
-                                    Forms\Components\FileUpload::make('cover_letter_file')
-                                        ->label(__("Lettre de motivation"))
-                                        ->downloadable()
-                                        ->acceptedFileTypes(['application/pdf']),
-                                ])->columns(3)
-                        ]),
+                            Forms\Components\TextInput::make('email')
+                                ->label(__("E-mail"))
+                                ->email()
+                                ->unique(ignoreRecord: true)
+                                ->required()
+                                ->maxLength(255),
+                            Forms\Components\TextInput::make('phone')
+                                ->required()
+                                ->label(__("Téléphone"))
+                                ->tel()
+                                ->maxLength(255),
+                            Forms\Components\Select::make('marital_status')
+                                ->label(__("État civil"))
+                                ->options(ResumeMaritalStatusEnum::toArray()),
+                            Forms\Components\Select::make('city_id')
+                                ->label(__("Ville"))
+                                ->preload()
+                                ->searchable()
+                                ->relationship('city', 'name'),
+                            Forms\Components\Textarea::make('address')
+                                ->label(__("Adresse"))
+                                ->rows(3),
+                            // Forms\Components\Select::make('company_work_post_id')
+                            //     ->searchable()
+                            //     ->relationship('workPost', 'name'),
+                            Forms\Components\FileUpload::make('cv_file')
+                                ->label(__("Fichier de CV"))
+                                ->downloadable()
+                                ->acceptedFileTypes(['application/pdf'])
+                                ->maxSize(10024),
+                            Forms\Components\FileUpload::make('cover_letter_file')
+                                ->label(__("Lettre de motivation"))
+                                ->downloadable()
+                                ->acceptedFileTypes(['application/pdf']),
+                        ])->columns(3),
                     Wizard\Step::make('Diplômes')
                         ->schema([
                             Forms\Components\Repeater::make('diplomas')
@@ -104,16 +101,15 @@ class ResumeResource extends Resource
                                     Forms\Components\TextInput::make('name')
                                         ->label(__("Diplôme"))
                                         ->required(),
-                                    Forms\Components\DatePicker::make('start_date')
-                                        ->format('d/m/Y')
-                                        ->label(__("Début"))
-                                        ->required(),
                                     Forms\Components\DatePicker::make('end_date')
-                                        ->format('d/m/Y')
-                                        ->label(__("Fin"))
-                                        ->required(),
+                                        ->locale('fr')
+                                        ->native(false)
+                                        ->displayFormat('d F Y')
+                                        ->prefixIcon('heroicon-m-calendar')
+                                        ->required()
+                                        ->label(__("Fin")),
 
-                                ])->columns(2)
+                                ])->columns(3)
                         ]),
                     Wizard\Step::make(__("Expérience"))
                         ->schema([
@@ -127,13 +123,18 @@ class ResumeResource extends Resource
                                         ->label(__("Post de travail"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('start_date')
-                                        ->format('d/m/Y')
                                         ->label(__("Début"))
+                                        ->locale('fr')
+                                        ->native(false)
+                                        ->displayFormat('d F Y')
+                                        ->prefixIcon('heroicon-m-calendar')
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
-                                        ->format('d/m/Y')
+                                        ->locale('fr')
+                                        ->native(false)
+                                        ->displayFormat('d F Y')
                                         ->label(__("Fin"))
-                                        ->required(),
+                                        ->prefixIcon('heroicon-m-calendar'),
                                 ])->columns(4)
                         ]),
                     Wizard\Step::make('Compétences')
@@ -156,7 +157,7 @@ class ResumeResource extends Resource
                                         ->label(__("Niveau"))
                                         ->required()
                                         ->options(LanguageLevelEnum::toArray())
-                                ])->grid(2)
+                                ])->columns(2)->grid(2)
                         ])
                 ])
                     ->persistStepInQueryString()
