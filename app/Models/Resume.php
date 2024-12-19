@@ -69,16 +69,15 @@ class Resume extends Model
         return $days / $daysPerMonth;
     }
     
-    public function getExperience() :int
+    public function getExperience() : int
     {
         $totalDays = 0;
         
         foreach ($this->experiences as $experience) {
             $startDate = Carbon::parse($experience->start_date);
-            $endDate = Carbon::parse($experience->end_date);
+            $endDate = $experience->end_date ? Carbon::parse($experience->end_date) : Carbon::today();
     
             $daysDifference = $startDate->diffInDays($endDate);
-            
             
             $totalDays += $daysDifference;
         }

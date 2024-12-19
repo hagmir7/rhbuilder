@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Diploma extends Model
 {
     protected $fillable = [
-        'resume_id', 'name', 'end_date', 'institution', 'private', 'level_id'
+        'resume_id',
+        'name',
+        'end_date',
+        'institution',
+        'private',
+        'level_id'
     ];
 
 
