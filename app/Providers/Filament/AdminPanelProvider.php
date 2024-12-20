@@ -50,6 +50,10 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
+            ])
+            ->plugins([
+                \Hasnayeen\Themes\ThemesPlugin::make()
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->authMiddleware([

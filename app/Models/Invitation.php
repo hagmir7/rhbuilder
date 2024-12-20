@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Invitation extends Model
 {
     protected $fillable = [
-        'date', 'interview_date', 'accepted', 'type'
+        'date',
+        'resume_id',
+        'interview_date',
+        'accepted',
+        'type'
     ];
 
 

@@ -104,7 +104,7 @@
                             @if($record->experiences && $record->experiences->count() > 0)
                             <div>
                                 <h3 class="mb-4 border-b-2 border-purple-200 pb-2 text-2xl font-semibold dark:border-purple-800">
-                                    {{ __('Expérience professionnelle') }}
+                                    {{ __('Expérience professionnelle') }} ({{ $record->getExperience()}}) {{ __("Mois") }}
                                 </h3>
                                 <div class="space-y-6">
                                     @foreach($record->experiences as $experience)

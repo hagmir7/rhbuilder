@@ -69,32 +69,21 @@ class Resume extends Model
         return $days / $daysPerMonth;
     }
     
-    public function getExperience() : int
+    public function getExperience() :int
     {
         $totalDays = 0;
         
         foreach ($this->experiences as $experience) {
             $startDate = Carbon::parse($experience->start_date);
-            $endDate = $experience->end_date ? Carbon::parse($experience->end_date) : Carbon::today();
-    
+            if($experience->end_date == null){
+                $endDate = Carbon::now();
+            }else{
+                $endDate = Carbon::parse($experience->end_date);
+            }
             $daysDifference = $startDate->diffInDays($endDate);
-            
             $totalDays += $daysDifference;
         }
         return round($this->daysToMonths($totalDays), 0);
     }
-    
-    protected static function booted()
-    {
-        static::created(function ($resume) {  // Trigger when a new record is created
-            $resume->experience_monthe = $resume->getExperience();
-            $resume->save();
-        });
-    
-        static::updated(function ($resume) {  // Trigger when an existing record is updated
-            $resume->experience_monthe = $resume->getExperience();
-            $resume->save();
-        });
-    }
-    
+  
 }

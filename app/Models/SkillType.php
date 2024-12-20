@@ -9,6 +9,6 @@ class SkillType extends Model
     protected $filable = ['name', 'description'];
 
     public function skills(){
-        return $this->belongsToMany(Skill::class);
+        return $this->hasMany(Skill::class);
     }
 }

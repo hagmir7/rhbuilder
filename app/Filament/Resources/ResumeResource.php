@@ -30,7 +30,7 @@ class ResumeResource extends Resource
 {
     protected static ?string $model = Resume::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static ?string $recordTitleAttribute = "full_name";
 
@@ -54,7 +54,6 @@ class ResumeResource extends Resource
                                 ->label(__("Prénom"))
                                 ->required()
                                 ->maxLength(255),
-
                             Forms\Components\TextInput::make('email')
                                 ->label(__("E-mail"))
                                 ->email()
@@ -71,18 +70,15 @@ class ResumeResource extends Resource
                                 ->placeholder(__("État civil"))
                                 ->options(ResumeMaritalStatusEnum::toArray()),
                             Forms\Components\Select::make('city_id')
+                                ->relationship('city', 'name')
                                 ->label(__("Ville"))
                                 ->preload()
                                 ->placeholder(__("Ville"))
-                                ->searchable()
-                                ->relationship('city', 'name'),
+                                ->searchable(),
                             Forms\Components\Textarea::make('address')
                                 ->label(__("Adresse"))
                                 ->placeholder(__("Adresse..."))
                                 ->rows(3),
-                            // Forms\Components\Select::make('company_work_post_id')
-                            //     ->searchable()
-                            //     ->relationship('workPost', 'name'),
                             Forms\Components\FileUpload::make('cv_file')
                                 ->label(__("Fichier de CV"))
                                 ->downloadable()
@@ -110,6 +106,8 @@ class ResumeResource extends Resource
                                         ->label(__("Filière"))
                                         ->required(),
                                     Forms\Components\DatePicker::make('end_date')
+                                        ->minDate(now()->subYears(20))
+                                        ->maxDate(now())
                                         ->locale('fr')
                                         ->native(false)
                                         ->displayFormat('d F Y')
@@ -136,13 +134,25 @@ class ResumeResource extends Resource
                                         ->native(false)
                                         ->displayFormat('d F Y')
                                         ->prefixIcon('heroicon-m-calendar')
-                                        ->required(),
+                                        ->minDate(now()->subYears(20))
+                                        ->maxDate(now())
+                                        ->required()
+                                        ->reactive(),
                                     Forms\Components\DatePicker::make('end_date')
                                         ->locale('fr')
                                         ->native(false)
                                         ->displayFormat('d F Y')
                                         ->label(__("Fin"))
-                                        ->prefixIcon('heroicon-m-calendar'),
+                                        ->minDate(now()->subYears(20))
+                                        ->maxDate(now())
+                                        ->closeOnDateSelection()
+                                        ->prefixIcon('heroicon-m-calendar')
+                                        ->required()
+                                        ->afterStateUpdated(function (callable $set, $state, $get) {
+                                            if ($state && $get('start_date') && $state < $get('start_date')) {
+                                                $set('start_date', null);
+                                            }
+                                        }),
                                 ])->columns(4)
                         ]),
                     Wizard\Step::make('Compétences')
@@ -161,6 +171,8 @@ class ResumeResource extends Resource
                                         ->label(__("Langue"))
                                         ->placeholder(__("Langue"))
                                         ->required()
+                                        ->native(false)
+                                        ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                                         ->relationship('language', 'name'),
                                     Forms\Components\Select::make('level')
                                         ->label(__("Niveau"))
@@ -273,22 +285,22 @@ class ResumeResource extends Resource
                             });
                         });
                     }),
-                    SelectFilter::make('levels')
-                        ->label(__("Niveaux"))
-                        ->form([
-                            Forms\Components\Select::make('level')
-                                ->multiple()
-                                ->searchable()
-                                ->label(__("Niveaux"))
-                                ->options(Level::all()->pluck('name', 'id')),
-                        ])
-                        ->query(function (Builder $query, array $data): Builder {
-                            return $query->when(!empty($data['level']), function (Builder $query) use ($data) {
-                                return $query->whereHas('diplomas', function ($q) use ($data) {
-                                    $q->whereIn('level_id', $data['level']);
-                                });
+                SelectFilter::make('levels')
+                    ->label(__("Niveaux"))
+                    ->form([
+                        Forms\Components\Select::make('level')
+                            ->multiple()
+                            ->searchable()
+                            ->label(__("Niveaux"))
+                            ->options(Level::all()->pluck('name', 'id')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when(!empty($data['level']), function (Builder $query) use ($data) {
+                            return $query->whereHas('diplomas', function ($q) use ($data) {
+                                $q->whereIn('level_id', $data['level']);
                             });
-                        }),
+                        });
+                    }),
             ])->filtersFormColumns(3)
             ->actions([
                 Tables\Actions\EditAction::make(),
