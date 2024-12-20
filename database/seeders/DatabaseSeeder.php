@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             LevelSeeder::class,
             UserSeeder::class,
             SkillTypeSeeder::class,
+            SkillSeeder::class,
             LanguageSeeder::class
         ]);
     }

@@ -39,8 +39,6 @@ class ResumeResource extends Resource
         return __("CV");
     }
 
-
-
     public static function form(Form $form): Form
     {
         return $form
@@ -218,14 +216,6 @@ class ResumeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                // Filter::make('Nouveau')->query(function($query){
-                //     return $query->where("status", 1);
-                // }),
-
-                // Filter::make('Invetaion')->query(function($query){
-                //     return $query->where("status", 2);
-                // }),
-
                 SelectFilter::make('status')
                     ->label(__("État"))
                     ->searchable()
@@ -323,7 +313,7 @@ class ResumeResource extends Resource
         return [
             'index' => Pages\ListResumes::route('/'),
             // 'create' => Pages\CreateResume::route('/create'),
-            // 'edit' => Pages\EditResume::route('/{record}/edit'),
+            'edit' => Pages\EditResume::route('/{record}/edit'),
             'view' => Pages\ViewResume::route('/{record}/view'),
         ];
     }
