@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use APP\Enums\LanguageLevelEnum;
+use App\Enums\LanguageLevelEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class ResumeLanguage extends Model

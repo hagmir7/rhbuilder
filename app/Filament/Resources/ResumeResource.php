@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use APP\Enums\LanguageLevelEnum;
+use App\Enums\LanguageLevelEnum;
 use App\Enums\ResumeMaritalStatusEnum;
 use App\Enums\ResumeStatusEnum;
 use App\Filament\Resources\ResumeResource\Pages;
