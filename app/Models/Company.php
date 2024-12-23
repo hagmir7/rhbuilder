@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    protected $fillabel = ['name', 'descripiton'];
+    protected $fillable = ['name', 'descripiton'];
 
 
     public function workPosts(){
-        return $this->hasMany(WorkPost::class);
+        return $this->hasMany(CompanyWorkPost::class);
     }
 
     public function resumes(){

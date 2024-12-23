@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\InvitationStatus;
 use App\Enums\InvitationTypeEnum;
 use App\Filament\Resources\InvitationResource\Pages;
 use App\Filament\Resources\InvitationResource\RelationManagers;
@@ -9,9 +10,11 @@ use App\Models\Invitation;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class InvitationResource extends Resource
@@ -33,6 +36,7 @@ class InvitationResource extends Resource
                 Forms\Components\Select::make('resume_id')
                     ->label(__("Candidat"))
                     ->searchable()
+                    ->preload()
                     ->relationship('resume', 'full_name')
                     ->required(),
                 Forms\Components\DateTimePicker::make('date')
@@ -55,12 +59,7 @@ class InvitationResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('type')
                     ->label(__("Type d'entretien"))
-                    ->options(InvitationTypeEnum::toArray())
-                    ->required()
-                    ->default(1),
-                Forms\Components\Toggle::make('accepted')
-                    ->label(__("Accepté"))
-                    ->default(false),
+                    ->options(InvitationTypeEnum::toArray()),
             ]);
     }
 
@@ -74,18 +73,24 @@ class InvitationResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date')
                     ->label(__("Date d'envoi"))
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('interview_date')
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->label(__("Date de l'entretien"))
                     ->sortable(),
-                Tables\Columns\SelectColumn::make('accepted')
-                    ->label(__("Accepté"))
-                    ->options(InvitationTypeEnum::toArray()),
+
+                Tables\Columns\ToggleColumn::make('accepted')
+                    ->label(__("Accepté")),
+
+                Tables\Columns\SelectColumn::make('status')
+                    ->placeholder(__('État'))
+                    ->label(__("État"))
+                    ->options(InvitationStatus::toArray()),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__("Créé le"))
-                    ->dateTime()
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -93,11 +98,21 @@ class InvitationResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label(false)
+                    ->tooltip(__('Edit'))
+                    ->iconSize(IconSize::Medium),
+                Tables\Actions\Action::make('accept')
+                    ->label(false)
+                    ->icon('heroicon-o-clipboard-document-check')
+                    ->tooltip(__('Accepté et Evaluer'))
+                    ->iconSize(IconSize::Medium),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                        // ->action(fn (Collection $records) => $records->each->delete())
+                    
                 ]),
             ]);
     }

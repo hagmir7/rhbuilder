@@ -12,7 +12,8 @@ class Invitation extends Model
         'resume_id',
         'interview_date',
         'accepted',
-        'type'
+        'type',
+        'status'
     ];
 
 

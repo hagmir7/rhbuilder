@@ -5,12 +5,16 @@ namespace App\Filament\Resources;
 use App\Enums\LanguageLevelEnum;
 use App\Enums\ResumeMaritalStatusEnum;
 use App\Enums\ResumeStatusEnum;
+use App\Filament\Resources\RecruitmentResource\RelationManagers\ResumesRelationManager;
 use App\Filament\Resources\ResumeResource\Pages;
 use App\Filament\Resources\ResumeResource\RelationManagers;
 use App\Models\City;
+use App\Models\Company;
+use App\Models\CompanyWorkPost;
 use App\Models\Diploma;
 use App\Models\Language;
 use App\Models\Level;
+use App\Models\Recruitment;
 use App\Models\Resume;
 use App\Models\Skill;
 use App\Models\WorkPost;
@@ -23,8 +27,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Get;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Notifications\Notification;
+
+
+
 
 class ResumeResource extends Resource
 {
@@ -309,6 +319,56 @@ class ResumeResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('remove')
+                        ->label("Ajouter à l'évaluation")
+                        ->modalContent()
+                        ->form([
+                            Forms\Components\Section::make()
+                                ->schema([
+                                    Forms\Components\Select::make('company_id')
+                                        ->label('Entreprise')
+                                        ->searchable()
+                                        ->required()
+                                        ->options(Company::all()->pluck('name', 'id')),
+                                    Forms\Components\Select::make('work_post_id')
+                                        ->label('Poste')
+                                        ->searchable()
+                                        ->required()
+                                        ->options(function (Get $get) {
+                                            $companyId = $get('company_id');
+                                            if ($companyId) {
+                                                return CompanyWorkPost::where('company_id', $companyId)->pluck('name', 'id');
+                                            }
+                                            return [];
+                                        }),
+                                    Forms\Components\Select::make('recruitment_id')
+                                        ->label('Collection de recrutement')
+                                        ->searchable()
+                                        ->required()
+                                        ->options(function (Get $get) {
+                                            $companyId = $get('work_post_id');
+                                            if ($companyId) {
+                                                return Recruitment::where('company_work_post_id', $companyId)->pluck('name', 'id');
+                                            }
+                                            return [];
+                                        }),
+                                ])->columns(2)
+
+
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each(function ($record) use ($data) {
+                                $record->recruitments()->attach($data['recruitment_id']);
+                            });
+
+
+                            Notification::make()
+                                ->title('Enregistré avec succès')
+                                ->body('Les enregistrements ont été mis à jour avec succès.')
+                                ->success()
+                                ->send();
+                        })
+                        ->icon('heroicon-o-folder-plus')
                 ]),
             ]);
     }
@@ -316,7 +376,6 @@ class ResumeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 

@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invitations', function (Blueprint $table) {
+        Schema::create('resume_rectruitments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('resume_id')->constrained()->onDelete('cascade');
-            $table->dateTime('date');
-            $table->dateTime('interview_date');
-            $table->boolean('accepted')->nullable();
-            $table->integer('type')->nullable();
-            $table->integer('status')->default(1);
+            $table->foreignId('recruitment_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invitations');
+        Schema::dropIfExists('resume_rectruitments');
     }
 };
