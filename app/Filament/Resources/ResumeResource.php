@@ -123,7 +123,7 @@ class ResumeResource extends Resource
                                         ->displayFormat('d F Y')
                                         ->prefixIcon('heroicon-m-calendar')
                                         ->required()
-                                        ->label(__("Fin")),
+                                        ->label(__("Obtenez-le")),
 
                                 ])->columns(3)
                         ]),
