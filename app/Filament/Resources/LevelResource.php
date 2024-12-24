@@ -29,12 +29,15 @@ class LevelResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__("Diplôme"))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('years')
+                    ->label(__("Bac +"))
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('coefficient')
+                    ->label(__("Coefficient"))
                     ->required()
                     ->numeric(),
             ]);
@@ -45,18 +48,17 @@ class LevelResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__("Diplôme"))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('years')
-                    ->numeric()
+                    ->label(__("Bac +"))
+                    ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('coefficient')
-                    ->numeric()
+                    ->label(__("Coefficient"))
+                    ->badge()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -85,8 +87,8 @@ class LevelResource extends Resource
     {
         return [
             'index' => Pages\ListLevels::route('/'),
-            'create' => Pages\CreateLevel::route('/create'),
-            'edit' => Pages\EditLevel::route('/{record}/edit'),
+            // 'create' => Pages\CreateLevel::route('/create'),
+            // 'edit' => Pages\EditLevel::route('/{record}/edit'),
         ];
     }
 }

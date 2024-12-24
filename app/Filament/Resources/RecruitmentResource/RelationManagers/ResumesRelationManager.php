@@ -34,8 +34,9 @@ class ResumesRelationManager extends RelationManager
                     ->searchable()
                     ->label(__("Nom complet")),
                 Tables\Columns\TextColumn::make('experience_monthe')
+                    ->numeric()
                     ->sortable()
-                    ->state(fn($record) => $record->getExperience() . " mois")
+                    ->state(fn($record): int => $record->getExperience())
                     ->label(__("Expérience"))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('level')
@@ -60,8 +61,11 @@ class ResumesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make(),
+                // Tables\Actions\CreateAction::make(),
+                Tables\Actions\AttachAction::make()
+                    ->preloadRecordSelect()
+                    ->recordSelectSearchColumns(['full_name'])
+                    ->icon('heroicon-o-arrow-down-on-square-stack'),
             ])
             ->actions([
                 Tables\Actions\DetachAction::make(),

@@ -26,11 +26,16 @@ class RecruitmentResource extends Resource
         return __("Recrutements");
     }
 
+
+    protected static ?string $recordTitleAttribute = "name";
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Section::make()
+                    ->collapsible()
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label(__("Nom de collection"))

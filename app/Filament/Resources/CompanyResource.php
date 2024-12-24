@@ -28,7 +28,6 @@ class CompanyResource extends Resource
     {
         return $form
             ->schema([
-
                 Forms\Components\Grid::make(3)
                     ->schema([
                         Forms\Components\Section::make()
