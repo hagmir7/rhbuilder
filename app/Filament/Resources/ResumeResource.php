@@ -35,7 +35,6 @@ use Filament\Notifications\Notification;
 
 
 
-
 class ResumeResource extends Resource
 {
     protected static ?string $model = Resume::class;

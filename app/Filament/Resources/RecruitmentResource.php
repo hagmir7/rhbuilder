@@ -5,10 +5,12 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\RecruitmentResource\Pages;
 use App\Filament\Resources\RecruitmentResource\RelationManagers;
 use App\Filament\Resources\RecruitmentResource\RelationManagers\ResumesRelationManager;
+use App\Models\CompanyWorkPost;
 use App\Models\Recruitment;
 use Filament\Forms;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -41,9 +43,20 @@ class RecruitmentResource extends Resource
                             ->label(__("Nom de collection"))
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\Select::make('company_id')
+                            ->label(__("Entreprise"))
+                            ->options(\App\Models\Company::all()->pluck('name', 'id'))
+                            ->preload()
+                            ->searchable()
+                            ->required(),
                         Forms\Components\Select::make('company_work_post_id')
                             ->label(__("Poste de travail"))
-                            ->relationship('companyWorkPost', 'name')
+                            ->options(function(Get $get){
+                                if($get('company_id')){
+                                    return CompanyWorkPost::where('company_id', $get('company_id'))->pluck('name', 'id');
+                                }else{
+                                    return [];
+                            }})
                             ->preload()
                             ->searchable()
                             ->required(),
