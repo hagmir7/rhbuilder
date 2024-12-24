@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SkillType extends Model
 {
-    protected $filable = ['name', 'description'];
+    protected $fillable = ['name', 'description'];
 
     public function skills(){
-        return $this->hasMany(Skill::class);
+        return $this->hasMany(Skill::class, 'skill_type_id');
     }
 }

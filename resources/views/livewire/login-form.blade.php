@@ -21,7 +21,7 @@
                           <label for="remember" class="text-gray-500">{{ __("Souviens-toi de moi") }}</label>
                         </div>
                     </div>
-                    <a href="" class="text-sm font-medium text-red-600 hover:underline">{{ __("Mot de passe oublié ?") }}</a>
+                    <a href="#!" class="text-sm font-medium text-red-600 hover:underline">{{ __("Mot de passe oublié ?") }}</a>
                 </div>
                 @if (session()->has('error'))
                     <div class="text-red-900 mt-3 p-2 bg-red-300 border-1 border-red-950 rounded-lg">{{ session('error') }}</div>

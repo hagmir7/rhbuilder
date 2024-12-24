@@ -44,6 +44,7 @@ class SkillTypeResource extends Resource
                     ]),
 
                 Forms\Components\Repeater::make('skills')
+                    ->relationship('skills')
                     ->label('Compétences')
                     ->schema([
                         Forms\Components\TextInput::make('name')
