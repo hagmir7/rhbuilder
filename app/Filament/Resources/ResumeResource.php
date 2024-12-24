@@ -28,8 +28,6 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Get;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Notifications\Notification;
 
@@ -236,23 +234,23 @@ class ResumeResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')
+                Tables\Filters\SelectFilter::make('status')
                     ->label(__("État"))
                     ->searchable()
                     ->options(ResumeStatusEnum::toArray()),
 
-                SelectFilter::make('marital_status')
+                Tables\Filters\SelectFilter::make('marital_status')
                     ->searchable()
                     ->label(__("État civil"))
                     ->options(ResumeMaritalStatusEnum::toArray()),
 
-                SelectFilter::make('city_id')
+                Tables\Filters\SelectFilter::make('city_id')
                     ->label(__("Ville"))
                     ->multiple()
                     ->preload()
                     ->relationship('city', 'name'),
 
-                SelectFilter::make('skills')
+                Tables\Filters\SelectFilter::make('skills')
                     ->form([
                         Forms\Components\Select::make('skill')
                             ->multiple()
@@ -267,7 +265,7 @@ class ResumeResource extends Resource
                             });
                         });
                     }),
-                SelectFilter::make('experience')
+                Tables\Filters\SelectFilter::make('experience')
                     ->form([
                         Forms\Components\TextInput::make('experience')
                             ->numeric(),
@@ -278,7 +276,7 @@ class ResumeResource extends Resource
                         });
                     }),
 
-                SelectFilter::make('languages')
+                Tables\Filters\SelectFilter::make('languages')
                     ->label(__("Langues"))
                     ->form([
                         Forms\Components\Select::make('language')
@@ -293,7 +291,7 @@ class ResumeResource extends Resource
                             });
                         });
                     }),
-                SelectFilter::make('levels')
+                Tables\Filters\SelectFilter::make('levels')
                     ->label(__("Niveaux"))
                     ->form([
                         Forms\Components\Select::make('level')
@@ -328,6 +326,7 @@ class ResumeResource extends Resource
                                         ->searchable()
                                         ->required()
                                         ->options(Company::all()->pluck('name', 'id')),
+
                                     Forms\Components\Select::make('work_post_id')
                                         ->label('Poste')
                                         ->searchable()
@@ -339,10 +338,10 @@ class ResumeResource extends Resource
                                             }
                                             return [];
                                         }),
+
                                     Forms\Components\Select::make('recruitment_id')
                                         ->label('Collection de recrutement')
                                         ->searchable()
-                                        ->required()
                                         ->options(function (Get $get) {
                                             $companyId = $get('work_post_id');
                                             if ($companyId) {
@@ -350,19 +349,51 @@ class ResumeResource extends Resource
                                             }
                                             return [];
                                         }),
+
+                                    Forms\Components\TextInput::make('recruitment_name')
+                                        ->label('Nom de la collection de recrutement'),
                                 ])->columns(2)
-
-
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $records->each(function ($record) use ($data) {
-                                $record->recruitments()->attach($data['recruitment_id']);
-                            });
-                            Notification::make()
-                                ->title('Enregistré avec succès')
-                                ->body('Les enregistrements ont été mis à jour avec succès.')
-                                ->success()
-                                ->send();
+
+                            if ($data['recruitment_name'] === null || $data['recruitment_id'] === null) {
+                                Notification::make()
+                                    ->title('Erreur')
+                                    ->body('Veuillez sélectionner une collection de recrutement ou en créer une.')
+                                    ->danger()
+                                    ->send();
+                                return;
+                            }
+
+                            if ($data['recruitment_name'] !== null) {
+                                $recruitment = Recruitment::create([
+                                    'name' => $data['recruitment_name'],
+                                    'company_work_post_id' => $data['work_post_id']
+                                ]);
+                                $data['recruitment_id'] = $recruitment->id;
+
+                                $records->each(function ($record) use ($recruitment) {
+                                    $record->recruitments()->attach($recruitment);
+                                });
+
+                                Notification::make()
+                                    ->title('Enregistré avec succès')
+                                    ->body('Les enregistrements ont été mis à jour avec succès.')
+                                    ->success()
+                                    ->send();
+                            }
+
+                            if ($data['recruitment_id'] !== null) {
+                                $records->each(function ($record) use ($data) {
+                                    $record->recruitments()->attach($data['recruitment_id']);
+                                });
+
+                                Notification::make()
+                                    ->title('Enregistré avec succès')
+                                    ->body('Les enregistrements ont été mis à jour avec succès.')
+                                    ->success()
+                                    ->send();
+                            }
                         })
                         ->icon('heroicon-o-folder-plus')
                 ]),
