@@ -17,7 +17,12 @@ class CompanyResource extends Resource
 {
     protected static ?string $model = Company::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
+    public static function getModelLabel(): string
+    {
+        return 'Entreprises';
+    }
 
     public static function form(Form $form): Form
     {
@@ -59,9 +64,6 @@ class CompanyResource extends Resource
                             ])
                             ->columnSpanFull()
                             ->grid(3),
-
-
-
                     ]),
 
 
@@ -72,8 +74,7 @@ class CompanyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('logo')
-                    ->searchable(),
+                Tables\Columns\ImageColumn::make('logo'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

@@ -157,7 +157,6 @@ class ResumeResource extends Resource
                                         ->maxDate(now())
                                         ->closeOnDateSelection()
                                         ->prefixIcon('heroicon-m-calendar')
-                                        ->required()
                                         ->afterStateUpdated(function (callable $set, $state, $get) {
                                             if ($state && $get('start_date') && $state < $get('start_date')) {
                                                 $set('start_date', null);
@@ -360,8 +359,6 @@ class ResumeResource extends Resource
                             $records->each(function ($record) use ($data) {
                                 $record->recruitments()->attach($data['recruitment_id']);
                             });
-
-
                             Notification::make()
                                 ->title('Enregistré avec succès')
                                 ->body('Les enregistrements ont été mis à jour avec succès.')
@@ -375,8 +372,7 @@ class ResumeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-        ];
+        return [];
     }
 
     public static function getPages(): array

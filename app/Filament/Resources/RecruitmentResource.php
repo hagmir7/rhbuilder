@@ -19,7 +19,12 @@ class RecruitmentResource extends Resource
 {
     protected static ?string $model = Recruitment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar-square';
+
+    public static function getModelLabel(): string
+    {
+        return __("Recrutements");
+    }
 
     public static function form(Form $form): Form
     {
