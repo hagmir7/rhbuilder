@@ -19,6 +19,8 @@ class CompanyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
+    protected static ?string $recordTitleAttribute = "name";
+
     public static function getModelLabel(): string
     {
         return 'Entreprises';

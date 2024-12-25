@@ -52,7 +52,24 @@ class AdminPanelProvider extends PanelProvider
                 \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ])
             ->plugins([
-                \Hasnayeen\Themes\ThemesPlugin::make()
+                \Hasnayeen\Themes\ThemesPlugin::make(),
+                \Saade\FilamentFullCalendar\FilamentFullCalendarPlugin::make()
+                    ->selectable(true)
+                    ->editable(true)
+                    ->schedulerLicenseKey('GPL-My-Project-Is-Open-Source')
+                    ->config([])
+                    ->plugins([
+                        'dayGrid',
+                        'timeGrid',
+                        'list',
+                        'interaction',
+                        // 'dayGridPlugin',
+                        // 'timeGridPlugin',
+                        // 'listPlugin',
+                        // 'interactionPlugin',
+                    ])
+                    ->locale('fr')
+      
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->authMiddleware([
