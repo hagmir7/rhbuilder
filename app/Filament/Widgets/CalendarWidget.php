@@ -14,21 +14,9 @@ use Saade\FilamentFullCalendar\Data\EventData;
 
 class CalendarWidget extends FullCalendarWidget
 {
-    // protected static string $view = 'filament.widgets.calendar-widget';
 
     public Model | string | null $model = Invitation::class;
 
-    // public function config(): array
-    // {
-    //     return [
-    //         'firstDay' => 1,
-    //         'headerToolbar' => [
-    //             'left' => 'dayGridWeek,dayGridDay',
-    //             'center' => 'title',
-    //             'right' => 'prev,next today',
-    //         ],
-    //     ];
-    // }
 
     protected function headerActions(): array
     {
@@ -60,7 +48,7 @@ class CalendarWidget extends FullCalendarWidget
                 ->mountUsing(
                     function (Invitation $record, Forms\Form $form, array $arguments) {
                         $form->fill([
-                            'resume_id'=> $record->resume_id,
+                            'resume_id' => $record->resume_id,
                             'name' => $record->name,
                             'interview_date' => $arguments['event']['start'] ?? $record->interview_date,
                             'date' => $record->date
@@ -111,19 +99,17 @@ class CalendarWidget extends FullCalendarWidget
     }
 
 
-     
+
     public function fetchEvents(array $fetchInfo): array
     {
         return Invitation::query()
             ->where('interview_date', '>=', $fetchInfo['start'])
-            // ->where('ends_at', '<=', $fetchInfo['end'])
             ->get()
             ->map(
-                fn (Invitation $event) => EventData::make()
+                fn(Invitation $event) => EventData::make()
                     ->id($event->id)
                     ->title($event->resume->full_name)
                     ->start($event->interview_date)
-                    // ->url()
             )
             ->toArray();
     }

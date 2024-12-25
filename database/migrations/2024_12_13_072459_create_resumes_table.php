@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->integer('marital_status')->nullable();
+            $table->date('birth_date')->nullable();
+            $table->integer('gender');
+            $table->string('cin', 30)->nullable();
             $table->text('address')->nullable();
             $table->foreignId('city_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('status')->default(1);

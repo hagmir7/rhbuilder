@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\LanguageLevelEnum;
+use App\Enums\ResumeGender;
 use App\Enums\ResumeMaritalStatusEnum;
 use App\Enums\ResumeStatusEnum;
 use App\Filament\Resources\RecruitmentResource\RelationManagers\ResumesRelationManager;
@@ -82,6 +83,17 @@ class ResumeResource extends Resource
                                 ->preload()
                                 ->placeholder(__("Ville"))
                                 ->searchable(),
+                            Forms\Components\DatePicker::make('birth_date')
+                                ->locale('fr')
+                                ->displayFormat('d F Y')
+                                ->native(false)
+                                ->label(__("Birth date")),
+                            Forms\Components\TextInput::make('cin')
+                                ->label(__("CIN")),
+                            Forms\Components\Select::make('gender')
+                                ->options(ResumeGender::toArray())
+                                ->label(__("Genre")),
+
                             Forms\Components\Textarea::make('address')
                                 ->label(__("Adresse"))
                                 ->placeholder(__("Adresse..."))

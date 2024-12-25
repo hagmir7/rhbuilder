@@ -23,7 +23,10 @@ class Resume extends Model
         'cover_letter_file',
         'company_work_post_id',
         'marital_status',
-        'experience_monthe'
+        'experience_monthe',
+        'birth_date',
+        'gender',
+        'cin'
     ];
 
 
