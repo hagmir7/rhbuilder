@@ -87,7 +87,7 @@ class ResumeResource extends Resource
                                 ->locale('fr')
                                 ->displayFormat('d F Y')
                                 ->native(false)
-                                ->label(__("Birth date")),
+                                ->label(__("Date naissance")),
                             Forms\Components\TextInput::make('cin')
                                 ->label(__("CIN")),
                             Forms\Components\Select::make('gender')
