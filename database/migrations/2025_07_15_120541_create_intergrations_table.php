@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('intergrations', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();
+            $table->foreignId('resume_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained()->onDelete('cascade');
+            $table->date('evaluation');
+            $table->foreignId('responsable_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->float('period')->default(0);
             $table->timestamps();
         });
     }
