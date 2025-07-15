@@ -98,11 +98,13 @@ class ResumeResource extends Resource
                                 ->label(__("Adresse"))
                                 ->placeholder(__("Adresse..."))
                                 ->rows(3),
+
                             Forms\Components\FileUpload::make('cv_file')
                                 ->label(__("Fichier de CV"))
                                 ->downloadable()
                                 ->acceptedFileTypes(['application/pdf'])
                                 ->maxSize(10024),
+                                
                             Forms\Components\FileUpload::make('cover_letter_file')
                                 ->label(__("Lettre de motivation"))
                                 ->downloadable()
