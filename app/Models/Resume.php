@@ -26,7 +26,8 @@ class Resume extends Model
         'experience_monthe',
         'birth_date',
         'gender',
-        'cin'
+        'cin',
+        'nationality'
     ];
 
 

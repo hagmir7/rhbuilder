@@ -30,6 +30,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('company_work_post_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('experience_monthe')->nullable();
+            $table->string('nationality')->default("Marocaine");
             $table->timestamps();
         });
     }
