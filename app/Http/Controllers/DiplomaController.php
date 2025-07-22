@@ -14,6 +14,17 @@ public function store(Request $request)
 {
     $data = $request->diplomas;
     $errors = [];
+    $updatedIds = [];
+
+    if (empty($data) || !is_array($data)) {
+        return response()->json(['message' => 'No valid diplomas provided.'], 400);
+    }
+
+    $resumeId = $data[0]['resume_id'] ?? null;
+
+    if (!$resumeId) {
+        return response()->json(['message' => 'Missing resume_id.'], 400);
+    }
 
     foreach ($data as $index => $diplomaData) {
         $validator = Validator::make($diplomaData, [
@@ -32,8 +43,8 @@ public function store(Request $request)
             continue;
         }
 
-        // Update if level_id + resume_id exist, else create
-        Diploma::updateOrCreate(
+        // Find or create/update based on level_id + resume_id
+        $diploma = Diploma::updateOrCreate(
             [
                 'level_id' => $diplomaData['level_id'] ?: null,
                 'resume_id' => $diplomaData['resume_id'],
@@ -44,7 +55,14 @@ public function store(Request $request)
                 'diplome' => $diplomaData['diplome'] ?? null,
             ]
         );
+
+        $updatedIds[] = $diploma->id;
     }
+
+    // Delete diplomas not in the updated list
+    Diploma::where('resume_id', $resumeId)
+        ->whereNotIn('id', $updatedIds)
+        ->delete();
 
     if (!empty($errors)) {
         return response()->json([
@@ -53,6 +71,6 @@ public function store(Request $request)
         ], 422);
     }
 
-    return response()->json(['message' => 'All diplomas saved successfully.']);
+    return response()->json(['message' => 'Diplomas updated successfully.']);
 }
 }

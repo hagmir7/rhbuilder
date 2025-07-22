@@ -19,10 +19,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::get('resumes/{resume}/diplomes', [ResumeController::class, 'diplomes']);
-Route::get('resumes/{resume}', [ResumeController::class, 'show']);
-Route::put('resumes/{resume}', [ResumeController::class, 'update']);
-Route::post('diplomas', [DiplomaController::class, 'store']);
+
+
 Route::get('/users', function () {
     return User::all();
 });
@@ -64,9 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('companies')
-        ->controller(CompanyController::class)
-        ->group(function () {
+    Route::prefix('companies')->controller(CompanyController::class)->group(function () {
             Route::get('/', 'index');
             Route::post('/', 'store');
             Route::get('{id}', 'show');
@@ -75,9 +71,17 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
 
+    Route::post('diplomas', [DiplomaController::class, 'store']);
+
+
      Route::prefix('resumes')->controller(ResumeController::class)->group(function(){
         Route::post('', 'store');
+        Route::get('{resume}/diplomes', 'diplomes');
+        Route::get('{resume}', 'show');
+        Route::put('{resume}', 'update');
      });
+
+
 
     Route::apiResource('cities', CityController::class);
     Route::apiResource('levels', LevelController::class);
