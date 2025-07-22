@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DiplomaController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
@@ -14,6 +18,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+Route::get('resumes/{resume}/diplomes', [ResumeController::class, 'diplomes']);
+Route::get('resumes/{resume}', [ResumeController::class, 'show']);
+Route::put('resumes/{resume}', [ResumeController::class, 'update']);
+Route::post('diplomas', [DiplomaController::class, 'store']);
 Route::get('/users', function () {
     return User::all();
 });
@@ -48,6 +57,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/permissions', [UserPermissionController::class, 'getAuthUserRolesAndPermissions']);
     Route::get('/user/{id}/permissions', [UserPermissionController::class, 'getUserRolesAndPermissions']);
     Route::get('/user/{id}', [AuthController::class, 'show']);
+
+
+
 });
 
 
@@ -61,5 +73,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('{id}', 'update');
             Route::delete('{id}', 'destroy');
         });
+
+
+     Route::prefix('resumes')->controller(ResumeController::class)->group(function(){
+        Route::post('', 'store');
+     });
+
+    Route::apiResource('cities', CityController::class);
+    Route::apiResource('levels', LevelController::class);
 });
 

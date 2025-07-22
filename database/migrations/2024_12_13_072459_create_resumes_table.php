@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('full_name')->virtualAs('concat(first_name, \' \', last_name)');
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
             $table->integer('marital_status')->nullable();
             $table->date('birth_date')->nullable();
