@@ -63,23 +63,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('companies')->controller(CompanyController::class)->group(function () {
-            Route::get('/', 'index');
-            Route::post('/', 'store');
-            Route::get('{id}', 'show');
-            Route::put('{id}', 'update');
-            Route::delete('{id}', 'destroy');
-        });
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::get('{id}', 'show');
+        Route::put('{id}', 'update');
+        Route::delete('{id}', 'destroy');
+    });
 
 
     Route::post('diplomas', [DiplomaController::class, 'store']);
 
 
-     Route::prefix('resumes')->controller(ResumeController::class)->group(function(){
+    Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
         Route::post('', 'store');
         Route::get('{resume}/diplomes', 'diplomes');
         Route::get('{resume}', 'show');
         Route::put('{resume}', 'update');
-     });
+    });
 
 
 
