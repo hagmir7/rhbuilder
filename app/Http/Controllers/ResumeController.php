@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
+    public function index()
+    {
+        return Resume::with(['city'])->latest()->paginate(20);
+    }
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -69,6 +75,13 @@ class ResumeController extends Controller
     {
         return $resume->diplomas;
     }
+
+
+    public function experiences(Resume $resume)
+    {
+        return $resume->experiences;
+    }
+    
 
     public function update(Request $request, $id)
     {

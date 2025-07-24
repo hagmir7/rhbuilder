@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DiplomaController;
+use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ResumeController;
@@ -72,11 +73,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post('diplomas', [DiplomaController::class, 'store']);
+    Route::post('experiences ', [ExperienceController::class, 'store']);
 
 
     Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
+        Route::get('', 'index');
         Route::post('', 'store');
         Route::get('{resume}/diplomes', 'diplomes');
+        Route::get('{resume}/experiences', 'experiences');
         Route::get('{resume}', 'show');
         Route::put('{resume}', 'update');
     });
