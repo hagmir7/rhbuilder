@@ -81,6 +81,16 @@ class ResumeController extends Controller
     {
         return $resume->experiences;
     }
+
+    public function skills(Resume $resume)
+    {
+        return $resume->skills;
+    }
+
+    public function languages(Resume $resume)
+    {
+        return $resume->languages;
+    }
     
 
     public function update(Request $request, $id)

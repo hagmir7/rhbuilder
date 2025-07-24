@@ -6,7 +6,7 @@ use App\Models\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-    class LevelController extends Controller
+class LevelController extends Controller
 {
     public function index()
     {

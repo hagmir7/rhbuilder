@@ -5,10 +5,13 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SkillController;
+use App\Http\Controllers\SkillTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
 use App\Models\User;
@@ -81,13 +84,35 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', 'store');
         Route::get('{resume}/diplomes', 'diplomes');
         Route::get('{resume}/experiences', 'experiences');
+        Route::get('{resume}/skills', 'skills');
+        Route::get('{resume}/languages ', 'languages');
         Route::get('{resume}', 'show');
         Route::put('{resume}', 'update');
     });
 
 
+     Route::prefix('skills/type')->controller(SkillTypeController::class)->group(function(){
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::get('{skill_type}', 'show');
+    });
+
+    Route::prefix('skills')->controller(SkillController::class)->group(function(){
+        Route::get('', 'index');
+        Route::post('resume/store', 'resumeSkillStore');
+    });
+
 
     Route::apiResource('cities', CityController::class);
     Route::apiResource('levels', LevelController::class);
+
+    Route::prefix('languages')->controller(LanguageController::class)->group(function(){
+        Route::post('resume/store', 'resumeLanagueStore');
+    });
+
+
+    Route::apiResource('languages', LanguageController::class);
+   
+    
 });
 
