@@ -42,11 +42,17 @@ class ResumeController extends Controller
             });
         }
 
-         if ($request->filled('levels')) {
-            $query->whereHas('diplomas', function ($q) use ($request) {
-                $q->whereIn('diplomas.id', $request->levels);
+        if ($request->filled('levels')) {
+            $levels = $request->input('levels');
+    
+
+            $query->whereHas('diplomas', function ($q) use ($levels) {
+                $q->whereIn('id', $levels);
             });
         }
+
+
+
 
         if ($request->filled('language_id')) {
             $query->whereHas('languages', function ($q) use ($request) {
