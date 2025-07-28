@@ -8,9 +8,56 @@ use Illuminate\Support\Facades\Validator;
 
 class ResumeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Resume::with(['city'])->latest()->paginate(20);
+        $query = Resume::with('city'); // Eager-load the city relationship
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('marital_status')) {
+            $query->where('marital_status', $request->marital_status);
+        }
+
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        if ($request->filled('min_experience')) {
+            $query->where('experience', '>=', (int) $request->min_experience);
+        }
+
+        if ($request->filled('gender')) {
+            $query->where('gender', $request->gender);
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->filled('skills')) {
+            $query->whereHas('skills', function ($q) use ($request) {
+                $q->whereIn('skills.id', $request->skills);
+            });
+        }
+
+         if ($request->filled('levels')) {
+            $query->whereHas('diplomas', function ($q) use ($request) {
+                $q->whereIn('diplomas.id', $request->levels);
+            });
+        }
+
+        if ($request->filled('language_id')) {
+            $query->whereHas('languages', function ($q) use ($request) {
+                $q->where('language_id', $request->language_id);
+            });
+        }
+
+    
+        $resumes = $query->paginate($request->input('per_page', 15));
+
+        return response()->json($resumes);
     }
 
 
@@ -91,7 +138,7 @@ class ResumeController extends Controller
     {
         return $resume->languages;
     }
-    
+
 
     public function update(Request $request, $id)
     {

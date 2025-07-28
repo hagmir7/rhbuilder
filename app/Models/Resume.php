@@ -74,6 +74,10 @@ class Resume extends Model
         return $this->belongsToMany(Recruitment::class, 'resume_rectruitments');
     }
 
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
+
 
     function daysToMonths($days) {
         $daysPerMonth = 30.44;

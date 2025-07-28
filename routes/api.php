@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DiplomaController;
@@ -105,6 +106,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('cities', CityController::class);
     Route::apiResource('levels', LevelController::class);
+    Route::apiResource('categories', CategoryController::class);
 
     Route::prefix('languages')->controller(LanguageController::class)->group(function(){
         Route::post('resume/store', 'resumeLanagueStore');
