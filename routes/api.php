@@ -83,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
-        Route::get('{resume}/diplomes', 'diplomes');
+        Route::get('{resume}/levels', 'levels');
         Route::get('{resume}/experiences', 'experiences');
         Route::get('{resume}/skills', 'skills');
         Route::get('{resume}/languages ', 'languages');
@@ -114,7 +114,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::apiResource('languages', LanguageController::class);
-   
-    
+
+
 });
 

@@ -43,14 +43,10 @@ class ResumeController extends Controller
         }
 
         if ($request->filled('levels')) {
-            $levels = $request->input('levels');
-    
-
-            $query->whereHas('diplomas', function ($q) use ($levels) {
-                $q->whereIn('id', $levels);
+            $query->whereHas('diplomas', function ($q) use ($request) {
+                $q->whereIn('id', [1]);
             });
         }
-
 
 
 
@@ -60,7 +56,7 @@ class ResumeController extends Controller
             });
         }
 
-    
+
         $resumes = $query->paginate($request->input('per_page', 15));
 
         return response()->json($resumes);
@@ -124,9 +120,9 @@ class ResumeController extends Controller
         return $resume;
     }
 
-    public function diplomes(Resume $resume)
+    public function levels(Resume $resume)
     {
-        return $resume->diplomas;
+        return $resume->levels;
     }
 
 

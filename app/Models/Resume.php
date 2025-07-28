@@ -41,9 +41,9 @@ class Resume extends Model
         return $this->belongsTo(City::class);
     }
 
-    public function diplomas()
+    public function levels()
     {
-        return $this->hasMany(Diploma::class);
+        return $this->belongsToMany(Level::class, 'diplomas')->withPivot(['name', 'end_date', 'institution', 'private']);
     }
 
     public function experiences()
@@ -83,11 +83,11 @@ class Resume extends Model
         $daysPerMonth = 30.44;
         return $days / $daysPerMonth;
     }
-    
+
     public function getExperience() :int
     {
         $totalDays = 0;
-        
+
         foreach ($this->experiences as $experience) {
             $startDate = Carbon::parse($experience->start_date);
             if($experience->end_date == null){
@@ -100,5 +100,5 @@ class Resume extends Model
         }
         return round($this->daysToMonths($totalDays), 0);
     }
-  
+
 }
