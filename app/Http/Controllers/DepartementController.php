@@ -12,7 +12,10 @@ class DepartementController extends Controller
     // Display a listing of departements
     public function index()
     {
-        $departements = Departement::withCount('services')->select("id", "name", "logo")->get();
+        $departements = Departement::select('id', 'name', 'logo')
+            ->withCount('services')
+            ->get();
+
         return response()->json($departements, 200);
     }
 
