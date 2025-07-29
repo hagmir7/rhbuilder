@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\LanguageController;
@@ -11,10 +12,12 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\SkillTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
+use App\Models\Departement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,14 +70,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('companies')->controller(CompanyController::class)->group(function () {
-        Route::get('/', 'index');
-        Route::post('/', 'store');
-        Route::get('{id}', 'show');
-        Route::put('{id}', 'update');
-        Route::delete('{id}', 'destroy');
-    });
-
 
     Route::post('diplomas', [DiplomaController::class, 'store']);
     Route::post('experiences ', [ExperienceController::class, 'store']);
@@ -92,11 +87,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-     Route::prefix('skills/type')->controller(SkillTypeController::class)->group(function(){
-        Route::get('', 'index');
-        Route::post('', 'store');
-        Route::get('{skill_type}', 'show');
-    });
 
     Route::prefix('skills')->controller(SkillController::class)->group(function(){
         Route::get('', 'index');
@@ -104,17 +94,38 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-    Route::apiResource('cities', CityController::class);
-    Route::apiResource('levels', LevelController::class);
-    Route::apiResource('categories', CategoryController::class);
+
 
     Route::prefix('languages')->controller(LanguageController::class)->group(function(){
         Route::post('resume/store', 'resumeLanagueStore');
     });
 
 
-    Route::apiResource('languages', LanguageController::class);
 
 
 });
+
+Route::apiResource('levels', LevelController::class);
+
+
+Route::apiResource('departements', DepartementController::class);
+
+Route::apiResource('services', ServiceController::class);
+
+
+Route::apiResource('skills/type', SkillTypeController::class);
+
+Route::apiResource('skills', SkillController::class);
+
+Route::apiResource('companies', CompanyController::class);
+
+
+Route::apiResource('cities', CityController::class);
+
+Route::apiResource('categories', CategoryController::class);
+
+Route::apiResource('languages', LanguageController::class);
+
+
+
 

@@ -45,19 +45,20 @@ class SkillController extends Controller
                 continue;
             }
 
-            // Mise à jour ou création basée sur skill_id + resume_id
+
             $skill = ResumeSkill::updateOrCreate(
                 [
                     'resume_id' => $skillData['resume_id'],
                     'skill_id' => $skillData['skill_id'],
                 ],
-                [] 
+                []
             );
 
             $updatedIds[] = $skill->id;
         }
 
-        // Supprimer les anciennes compétences non présentes dans la nouvelle liste
+
+
         ResumeSkill::where('resume_id', $resumeId)
             ->whereNotIn('id', $updatedIds)
             ->delete();
@@ -70,5 +71,76 @@ class SkillController extends Controller
         }
 
         return response()->json(['message' => 'Les compétences ont été mises à jour avec succès.']);
+    }
+
+
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'skill_type_id' => 'nullable|exists:skill_types,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $skill = Skill::create($validator->validated());
+
+        return response()->json($skill, 201);
+    }
+
+    public function show($id)
+    {
+        $skill = Skill::with(['type', 'resumes'])->find($id);
+
+        if (!$skill) {
+            return response()->json(['message' => 'Skill not found'], 404);
+        }
+
+        return response()->json($skill, 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $skill = Skill::find($id);
+
+        if (!$skill) {
+            return response()->json(['message' => 'Skill not found'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'skill_type_id' => 'nullable|exists:skill_types,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $skill->update($validator->validated());
+
+        return response()->json($skill, 200);
+    }
+
+    // Delete a skill
+    public function destroy($id)
+    {
+        $skill = Skill::find($id);
+
+        if (!$skill) {
+            return response()->json(['message' => 'Skill not found'], 404);
+        }
+
+        $skill->delete();
+
+        return response()->json(['message' => 'Skill deleted successfully'], 200);
     }
 }

@@ -8,9 +8,12 @@ class Skill extends Model
 {
     protected $fillable = ['name'];
 
-    public function resumeSkills()
+    public function resumes()
     {
-        return $this->hasMany(ResumeSkill::class);
+        return $this->belongsToMany(Resume::class, 'resume_skills')->withTimestamps();
     }
-    
+
+    public function type(){
+        return $this->belongsTo(SkillType::class, 'skill_type_id');
+    }
 }

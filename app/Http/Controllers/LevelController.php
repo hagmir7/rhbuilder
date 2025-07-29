@@ -10,7 +10,7 @@ class LevelController extends Controller
 {
     public function index()
     {
-        return response()->json(Level::all());
+        return response()->json(Level::select('id', 'name', 'years', 'coefficient')->get());
     }
 
     public function store(Request $request)
@@ -35,6 +35,7 @@ class LevelController extends Controller
 
     public function show(Level $level)
     {
+        $level->load('resumes');
         return response()->json($level);
     }
 
@@ -64,4 +65,6 @@ class LevelController extends Controller
 
         return response()->json(['message' => 'Level deleted successfully']);
     }
+
+
 }
