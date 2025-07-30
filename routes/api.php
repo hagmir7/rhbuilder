@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NeedController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
@@ -125,6 +126,8 @@ Route::apiResource('cities', CityController::class);
 Route::apiResource('categories', CategoryController::class);
 
 Route::apiResource('languages', LanguageController::class);
+
+Route::apiResource('needs', NeedController::class);
 
 
 
