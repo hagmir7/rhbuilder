@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
@@ -76,16 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('experiences ', [ExperienceController::class, 'store']);
 
 
-    Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
-        Route::get('', 'index');
-        Route::post('', 'store');
-        Route::get('{resume}/levels', 'levels');
-        Route::get('{resume}/experiences', 'experiences');
-        Route::get('{resume}/skills', 'skills');
-        Route::get('{resume}/languages ', 'languages');
-        Route::get('{resume}', 'show');
-        Route::put('{resume}', 'update');
-    });
+
 
 
 
@@ -104,6 +96,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+});
+
+Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
+    Route::get('', 'index');
+    Route::post('', 'store');
+    Route::get('{resume}/levels', 'levels');
+    Route::get('{resume}/experiences', 'experiences');
+    Route::get('{resume}/skills', 'skills');
+    Route::get('{resume}/languages ', 'languages');
+    Route::get('{resume}', 'show');
+    Route::put('{resume}', 'update');
 });
 
 Route::apiResource('levels', LevelController::class);
@@ -128,6 +131,7 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('languages', LanguageController::class);
 
 Route::apiResource('needs', NeedController::class);
+Route::apiResource('invitations', InvitationController::class);
 
 
 

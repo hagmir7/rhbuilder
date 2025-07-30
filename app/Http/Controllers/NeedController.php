@@ -27,7 +27,6 @@ class NeedController extends Controller
             'gender'         => 'required|integer',
             'min_age'        => 'required|integer|min:0',
             'max_age'        => 'required|integer|gte:min_age',
-            'status'         => 'required|boolean',
             'description'    => 'nullable|string',
             'skills'         => 'nullable|array',
             'skills.*'       => 'exists:skills,id',
