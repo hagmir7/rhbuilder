@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\LanguageController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\SkillTypeController;
 use App\Http\Controllers\UserController;
@@ -114,6 +116,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::apiResource('languages', LanguageController::class);
+    Route::apiResource('departements', DepartementController::class);
+    Route::apiResource('services', ServiceController::class);
 
 
 });
