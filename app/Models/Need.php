@@ -9,7 +9,7 @@ class Need extends Model
     protected $fillable = [
         'service_id',
         'responsable_id',
-        'diplome_id',
+        'level_id',
         'experience_min',
         'gender',
         'min_age',
@@ -17,4 +17,23 @@ class Need extends Model
         'status',
         'description'
     ];
+
+    public function service(){
+        return $this->belongsTo(Service::class);
+    }
+
+    public function responsible(){
+        return $this->belongsTo(User::class, 'responsable_id');
+    }
+
+    public function level(){
+        return $this->belongsTo(Level::class);
+    }
+
+
+    public function skills(){
+        return $this->belongsToMany(Skill::class, 'need_skill');
+    }
+
+
 }

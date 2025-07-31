@@ -22,15 +22,15 @@ return new class extends Migration
                 ->constrained('users')
                 ->onDelete('cascade');
 
-            $table->foreignId('diploma_id')
+            $table->foreignId('level_id')
                 ->constrained()
                 ->onDelete('cascade');
 
             $table->integer('experience_min')->default(0);
-            $table->unsignedTinyInteger('gender')->nullable(); // 0: Homme, 1: Femme, etc.
+            $table->unsignedTinyInteger('gender')->nullable();
             $table->unsignedTinyInteger('min_age')->default(20);
             $table->unsignedTinyInteger('max_age')->default(30);
-            $table->unsignedTinyInteger('status')->default(1); // 1: actif, 0: inactif...
+            $table->unsignedTinyInteger('status')->default(1);
 
             $table->string('description')->nullable();
 

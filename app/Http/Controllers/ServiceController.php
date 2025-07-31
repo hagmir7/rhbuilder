@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
-    // GET /api/services
+    // Display a listing of the services
     public function index()
     {
-        return response()->json(Service::with(['departement', 'responsible'])->get());
+        $services = Service::with(['departement'])->select('id', 'name', 'departement_id')->get();
+        return response()->json($services, 200);
     }
 
-    // POST /api/services
+    // Store a newly created service in storage
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'departement_id' => 'required|exists:departements,id',
-            'responsible_id' => 'nullable|exists:users,id',
+            'departement_id' => 'required|integer|exists:departements,id',
             'description' => 'nullable|string',
+            'responsible_id' => 'nullable|integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -31,42 +33,37 @@ class ServiceController extends Controller
             ], 422);
         }
 
-        $service = Service::create($request->all());
+        $service = Service::create($validator->validated());
 
-        return response()->json([
-            'message' => 'Service créé avec succès.',
-            'data' => $service
-        ], 201);
+        return response()->json($service, 201);
     }
 
-    // GET /api/services/{id}
+    // Display the specified service
     public function show($id)
     {
-        $service = Service::find($id);
+        $service = Service::with(['departement', 'responsible'])->find($id);
 
         if (!$service) {
-            return response()->json(['message' => 'Service introuvable.'], 404);
+            return response()->json(['message' => 'Service not found'], 404);
         }
 
-        return response()->json($service);
+        return response()->json($service, 200);
     }
 
-    // PUT or PATCH /api/services/{id}
+    // Update the specified service in storage
     public function update(Request $request, $id)
     {
         $service = Service::find($id);
 
         if (!$service) {
-            return response()->json(['message' => 'Service introuvable.'], 404);
+            return response()->json(['message' => 'Service not found'], 404);
         }
-
-        dd($request->all());
 
         $validator = Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'departement_id' => 'sometimes|required|exists:departements,id',
-            'responsible_id' => 'sometimes|required|exists:users,id',
+            'departement_id' => 'sometimes|required|integer|exists:departements,id',
             'description' => 'nullable|string',
+            'responsible_id' => 'nullable|integer|exists:users,id',
         ]);
 
         if ($validator->fails()) {
@@ -76,25 +73,21 @@ class ServiceController extends Controller
             ], 422);
         }
 
-        $service->update($request->all());
+        $service->update($validator->validated());
 
-        return response()->json([
-            'message' => 'Service mis à jour avec succès.',
-            'data' => $service
-        ]);
+        return response()->json($service, 200);
     }
 
-    // DELETE /api/services/{id}
+    // Remove the specified service from storage
     public function destroy($id)
     {
         $service = Service::find($id);
 
         if (!$service) {
-            return response()->json(['message' => 'Service introuvable.'], 404);
+            return response()->json(['message' => 'Service not found'], 404);
         }
 
         $service->delete();
-
-        return response()->json(['message' => 'Service supprimé avec succès.']);
+        return response()->json(['message' => 'Service deleted successfully'], 200);
     }
 }
