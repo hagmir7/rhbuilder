@@ -32,56 +32,56 @@ class DepartementSeeder extends Seeder
         Service::create([
             "name" => "Achat et approvisionnement",
             "departement_id" => $logistique->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Stock et Magasinage",
             "departement_id" => $logistique->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Préparation expéditions",
             "departement_id" => $logistique->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
 
         Service::create([
             "name" => "RH et SI",
             "departement_id" => $administratif->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Comptabilité",
             "departement_id" => $administratif->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Marketing",
             "departement_id" => $administratif->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Fabrication",
             "departement_id" => $production->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Mantenance",
             "departement_id" => $production->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
 
         Service::create([
             "name" => "Conformité des produits et de la sécurité",
             "departement_id" => $production->id,
-            "responsable_id" => 1
+            "responsible_id" => 1
         ]);
     }
 }

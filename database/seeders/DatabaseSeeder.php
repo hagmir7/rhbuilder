@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            DepartementSeeder::class,
+            ResumeSeeder::class
         ]);
     }
 }

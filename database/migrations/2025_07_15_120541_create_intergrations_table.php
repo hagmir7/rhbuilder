@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('resume_id')->constrained()->onDelete('cascade');
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->date('evaluation');
-            $table->foreignId('responsable_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('responsible_id')->nullable()->constrained('users')->nullOnDelete();
             $table->float('period')->default(0);
             $table->timestamps();
         });

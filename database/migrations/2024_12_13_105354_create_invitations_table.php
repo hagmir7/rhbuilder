@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('resume_id')->constrained()->onDelete('cascade');
-            $table->dateTime('date');
-            $table->dateTime('interview_date');
+            $table->dateTime('date')->nullable();
+            $table->dateTime('interview_date')->nullable();
             $table->boolean('accepted')->nullable();
             $table->integer('type')->nullable();
             $table->integer('status')->default(1);

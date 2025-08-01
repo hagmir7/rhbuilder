@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InvitationStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Invitation;
 use Illuminate\Http\Request;
@@ -20,12 +21,12 @@ class InvitationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'required|date',
+            'date' => 'nullable|date|after:now',
             'resume_id' => 'required|exists:resumes,id',
-            'interview_date' => 'nullable|date',
+            'interview_date' => 'nullable|date|after:now',
             'accepted' => 'nullable|boolean',
-            'type' => ['required', new Enum(InvitationTypeEnum::class)],
-            'status' => 'nullable|string',
+            'type' => ['nullable', new Enum(InvitationTypeEnum::class)],
+            'status' => ['nullable', new Enum(InvitationStatus::class)],
         ]);
 
         if ($validator->fails()) {
@@ -46,12 +47,12 @@ class InvitationController extends Controller
     public function update(Request $request, Invitation $invitation)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'sometimes|date',
-            'resume_id' => 'sometimes|exists:resumes,id',
-            'interview_date' => 'nullable|date',
+            'date' => 'nullable|date|after:now',
+            'resume_id' => 'required|exists:resumes,id',
+            'interview_date' => 'nullable|date|after:now',
             'accepted' => 'nullable|boolean',
-            'type' => ['sometimes', new Enum(InvitationTypeEnum::class)],
-            'status' => 'nullable|string',
+            'type' => ['nullable', new Enum(InvitationTypeEnum::class)],
+            'status' => ['nullable', new Enum(InvitationStatus::class)],
         ]);
 
         if ($validator->fails()) {

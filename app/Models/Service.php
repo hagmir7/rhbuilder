@@ -8,8 +8,7 @@ class Service extends Model
 {
     protected $fillable = ['name', 'departement_id', 'description', 'responsible_id'];
 
-
-
+    
     public function departement(){
         return $this->belongsTo(Departement::class);
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->foreignId('responsable_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('responsible_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('resume_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('post_id')->nullable()->constrained()->nullOnDelete();

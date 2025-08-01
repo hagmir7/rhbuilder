@@ -8,7 +8,7 @@ class Need extends Model
 {
     protected $fillable = [
         'service_id',
-        'responsable_id',
+        'responsible_id',
         'level_id',
         'experience_min',
         'gender',
@@ -23,7 +23,7 @@ class Need extends Model
     }
 
     public function responsible(){
-        return $this->belongsTo(User::class, 'responsable_id');
+        return $this->belongsTo(User::class, 'responsible_id');
     }
 
     public function level(){

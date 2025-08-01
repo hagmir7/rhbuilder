@@ -8,7 +8,7 @@ class Interview extends Model
 {
     protected $fillable = [
         'code',
-        'responsable_id',
+        'responsible_id',
         'user_id',
         'resume_id',
         'post_id',

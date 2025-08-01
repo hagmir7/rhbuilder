@@ -21,7 +21,7 @@ class NeedController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'service_id'     => 'required|exists:services,id',
-            'responsable_id' => 'required|exists:users,id',
+            'responsible_id' => 'required|exists:users,id',
             'level_id'     => 'required|exists:levels,id',
             'experience_min' => 'required|integer|min:0',
             'gender'         => 'required|integer',
@@ -33,12 +33,15 @@ class NeedController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
         }
 
         $need = Need::create($request->only([
             'service_id',
-            'responsable_id',
+            'responsible_id',
             'level_id',
             'experience_min',
             'gender',
@@ -78,7 +81,7 @@ class NeedController extends Controller
 
         $validator = Validator::make($request->all(), [
             'service_id'     => 'sometimes|exists:services,id',
-            'responsable_id' => 'sometimes|exists:users,id',
+            'responsible_id' => 'sometimes|exists:users,id',
             'diplome_id'     => 'sometimes|exists:diplomas,id',
             'experience_min' => 'sometimes|integer|min:0',
             'gender'         => 'sometimes|in:male,female,other',
@@ -96,7 +99,7 @@ class NeedController extends Controller
 
         $need->update($request->only([
             'service_id',
-            'responsable_id',
+            'responsible_id',
             'diplome_id',
             'experience_min',
             'gender',
