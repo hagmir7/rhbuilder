@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CriteriaTypeController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
@@ -130,6 +131,7 @@ Route::apiResource('languages', LanguageController::class);
 
 Route::apiResource('needs', NeedController::class);
 Route::apiResource('invitations', InvitationController::class);
+Route::apiResource('criteria-types', CriteriaTypeController::class);
 
 
 

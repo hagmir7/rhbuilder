@@ -21,7 +21,7 @@ class InvitationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'nullable|date|after:now',
+            'date' => 'nullable|date',
             'resume_id' => 'required|exists:resumes,id',
             'interview_date' => 'nullable|date|after:now',
             'accepted' => 'nullable|boolean',
@@ -47,7 +47,7 @@ class InvitationController extends Controller
     public function update(Request $request, Invitation $invitation)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'nullable|date|after:now',
+            'date' => 'nullable|date',
             'resume_id' => 'required|exists:resumes,id',
             'interview_date' => 'nullable|date|after:now',
             'accepted' => 'nullable|boolean',
