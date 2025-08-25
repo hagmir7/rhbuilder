@@ -42,6 +42,7 @@ class CriteriaTypeController extends Controller
      */
     public function show(CriteriaType $criteriaType)
     {
+        $criteriaType->load('criteria');
         return response()->json($criteriaType, 200);
     }
 

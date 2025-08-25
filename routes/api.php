@@ -18,6 +18,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SkillController;
 use App\Http\Controllers\SkillTypeController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
 use App\Models\Departement;
@@ -132,6 +133,9 @@ Route::apiResource('languages', LanguageController::class);
 Route::apiResource('needs', NeedController::class);
 Route::apiResource('invitations', InvitationController::class);
 Route::apiResource('criteria-types', CriteriaTypeController::class);
+
+
+Route::apiResource('templates', TemplateController::class);
 
 
 
