@@ -26,7 +26,7 @@ class TemplateController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'departement_id' => 'nullable|exists:departements,id',
-            // 'criteria' => 
+            // 'criteria' => 'required|array|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -35,10 +35,16 @@ class TemplateController extends Controller
             ], 422);
         }
 
-        $template = Template::create($validator->validated());
+        $template = Template::create($validator->safe()->except('criteria'));
 
-        return response()->json($template, 201);
+ 
+        foreach ($request->input('criteria') as $crit) {
+            $template->criteria()->attach($crit['value']);
+        }
+
+        return response()->json($template->load('criteria'), 201);
     }
+
 
     /**
      * Display the specified template.
