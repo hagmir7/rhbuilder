@@ -188,4 +188,26 @@ class ResumeController extends Controller
             'resume'  => $resume,
         ], 200);
     }
+
+
+    public function list(Request $request)
+    {
+        $query = Resume::select('id', 'full_name', 'phone', 'email');
+
+        // Search
+        if ($request->has('q')) {
+            $search = $request->input('q');
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Pagination (default 10 per page)
+        $perPage = $request->input('per_page', 30);
+        $resumes = $query->latest()->paginate($perPage);
+
+        return response()->json($resumes, 200);
+    }
 }

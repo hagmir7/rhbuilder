@@ -9,10 +9,12 @@ use App\Http\Controllers\CriteriaTypeController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
@@ -101,12 +103,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
     Route::get('', 'index');
     Route::post('', 'store');
+    Route::get('list', 'list');
     Route::get('{resume}/levels', 'levels');
     Route::get('{resume}/experiences', 'experiences');
     Route::get('{resume}/skills', 'skills');
     Route::get('{resume}/languages ', 'languages');
     Route::get('{resume}', 'show');
     Route::put('{resume}', 'update');
+   
 });
 
 Route::apiResource('levels', LevelController::class);
@@ -136,6 +140,9 @@ Route::apiResource('criteria-types', CriteriaTypeController::class);
 
 
 Route::apiResource('templates', TemplateController::class);
+
+Route::apiResource('interviews', InterviewController::class);
+Route::apiResource('posts', PostController::class);
 
 
 

@@ -13,7 +13,7 @@ class TemplateController extends Controller
      */
     public function index()
     {
-        return response()->json(Template::all(), 200);
+        return response()->json(Template::with('departement')->withCount('criteria')->latest()->get(), 200);
     }
 
     /**
@@ -22,11 +22,9 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'code' => 'required|string|max:255|unique:templates,code',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'departement_id' => 'nullable|exists:departements,id',
-            // 'criteria' => 'required|array|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -45,25 +43,13 @@ class TemplateController extends Controller
         return response()->json($template->load('criteria'), 201);
     }
 
-
-    /**
-     * Display the specified template.
-     */
-    public function show(Template $template)
-    {
-        return response()->json($template, 200);
-    }
-
-    /**
-     * Update the specified template in storage.
-     */
     public function update(Request $request, Template $template)
     {
         $validator = Validator::make($request->all(), [
-            'code' => 'required|string|max:255|unique:templates,code,' . $template->id,
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'departement_id' => 'nullable|exists:departements,id',
+          
         ]);
 
         if ($validator->fails()) {
@@ -72,10 +58,44 @@ class TemplateController extends Controller
             ], 422);
         }
 
-        $template->update($validator->validated());
+        // Update template basic fields
+        $template->update($validator->safe()->except('criteria'));
 
-        return response()->json($template, 200);
+        // Sync criteria (remove old ones, attach new ones)
+        if ($request->has('criteria')) {
+            $criteriaIds = collect($request->input('criteria'))
+                ->pluck('value')   // take the value (ID) from your frontend payload
+                ->toArray();
+
+            $template->criteria()->sync($criteriaIds);
+        }
+
+        return response()->json($template->load('criteria'), 200);
     }
+
+
+
+    /**
+     * Display the specified template.
+     */
+  public function show(Template $template)
+{
+    $template->load([
+        'criteria' => function ($query) {
+            $query->select('criterias.id', 'criterias.description', 'criterias.criteria_type_id');
+        },
+        'criteria.criteriaType:id,name',
+        'departement:id,name'
+    ]);
+
+    return response()->json($template, 200);
+}
+
+
+    /**
+     * Update the specified template in storage.
+     */
+
 
     /**
      * Remove the specified template from storage.
