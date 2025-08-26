@@ -11,15 +11,25 @@ class InterviewController extends Controller
     /**
      * Display a listing of the interviews.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Interview::with(['resume:id,full_name,phone', 
-            'company:id,name', 'post:id,name', 
-            'user:id,full_name,phone', 
+        $interview = Interview::with([
+            'resume:id,full_name,phone',
+            'company:id,name',
+            'post:id,name',
+            'user:id,full_name,phone',
             'template:id,code,name',
             'responsible:id,full_name,post_id',
             'responsible.post:id,name'
-            ])->latest()->get(), 200);
+        ]);
+
+
+
+        if(isset($request->status)){
+            $interview->where('decision', $request->status);
+        }
+        
+        return response()->json($interview->latest()->get(), 200);
     }
 
     /**
