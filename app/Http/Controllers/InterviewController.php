@@ -65,6 +65,7 @@ class InterviewController extends Controller
      */
     public function show(Interview $interview)
     {
+        $interview->load('template.criteria', 'resume', 'post', 'responsible');
         return response()->json($interview, 200);
     }
 
