@@ -194,16 +194,18 @@ class ResumeController extends Controller
     {
         $query = Resume::select('id', 'full_name', 'phone', 'email');
 
-        // Search
         if ($request->has('q')) {
             $search = $request->input('q');
-            $query->where(function ($q) use ($search) {
+            $query->where(function ($q) use ($search, $request) {
                 $q->where('full_name', 'like', "%{$search}%")
                     ->orWhere('phone', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
+
+                if ($request->filled('resume_id')) {  // use filled() to check it's not empty
+                    $q->orWhere("id", $request->input('resume_id'));
+                }
             });
         }
-
         // Pagination (default 10 per page)
         $perPage = $request->input('per_page', 30);
         $resumes = $query->latest()->paginate($perPage);
