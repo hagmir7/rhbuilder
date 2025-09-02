@@ -56,5 +56,9 @@ class Interview extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function criteria(){
+        return $this->belongsToMany(Criteria::class, 'interview_criteria')->withPivot('note');
+    }
+
    
 }

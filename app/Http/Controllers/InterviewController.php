@@ -20,7 +20,8 @@ class InterviewController extends Controller
             'user:id,full_name,phone',
             'template:id,code,name',
             'responsible:id,full_name,post_id',
-            'responsible.post:id,name'
+            'responsible.post:id,name',
+            'criteria'
         ]);
 
 
@@ -63,9 +64,22 @@ class InterviewController extends Controller
     /**
      * Display the specified interview.
      */
+    // public function show(Interview $interview)
+    // {
+    //      $interview->load('template.criteria', 'resume', 'post', 'responsible', 'criteria');
+    //     return response()->json($interview, 200);
+    // }
+
     public function show(Interview $interview)
     {
-        $interview->load('template.criteria', 'resume', 'post', 'responsible');
+        $interview->load(
+            'template.criteria:id,code,description',
+            'template:id,code,name',
+            'resume:id,full_name,email,phone,birth_date',
+            'post',
+            'responsible:id,name,full_name',
+            'criteria:id,code,description'
+        );
         return response()->json($interview, 200);
     }
 
@@ -88,7 +102,8 @@ class InterviewController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
             ], 422);
         }
 
@@ -105,5 +120,35 @@ class InterviewController extends Controller
         $interview->delete();
 
         return response()->json(null, 204);
+    }
+
+
+    public function evaluateCriteria(Interview $interview, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'criteria_id' => 'required|integer|exists:criterias,id',
+            'note'        => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors'  => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        if ($interview->criteria()->where('criteria_id', $request->criteria_id)->exists()) {
+            $interview->criteria()->updateExistingPivot($request->criteria_id, [
+                'note' => $request->note
+            ]);
+        } else {
+            $interview->criteria()->attach($request->criteria_id, [
+                'note' => $request->note
+            ]);
+        }
+
+        $interview->load('template.criteria', 'resume', 'post', 'responsible', 'criteria');
+
+        return response()->json($interview);
     }
 }

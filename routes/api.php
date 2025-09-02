@@ -142,6 +142,11 @@ Route::apiResource('criteria-types', CriteriaTypeController::class);
 Route::apiResource('templates', TemplateController::class);
 
 Route::apiResource('interviews', InterviewController::class);
+Route::prefix('interviews')->controller(InterviewController::class)->group(function(){
+    Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
+});
+
+
 Route::apiResource('posts', PostController::class);
 
 
