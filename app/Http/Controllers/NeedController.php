@@ -215,9 +215,31 @@ class NeedController extends Controller
 
 
 
-    public function resumes(Need $need){
+    public function resumes(Need $need)
+    {
+        $need->load([
+            'service',
+            'responsible',
+            'levels',
+            'skills',
+            'resumes.levels',
+            'resumes.city'
+        ]);
 
-        $need->load(['service', 'responsible', 'levels', 'skills', 'resumes']);
+        $need->resumes->transform(function ($resume) {
+            if ($resume->levels->isNotEmpty()) {
+                // Keep only the level with the highest coefficient
+                $resume->top_level = $resume->levels->sortByDesc('coefficient')->first();
+            } else {
+                $resume->top_level = null;
+            }
+
+            // Optionally remove the original levels collection
+            unset($resume->levels);
+
+            return $resume;
+        });
+
         return response()->json($need);
     }
 }
