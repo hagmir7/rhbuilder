@@ -22,9 +22,6 @@ return new class extends Migration
                 ->constrained('users')
                 ->onDelete('cascade');
 
-            $table->foreignId('level_id')
-                ->constrained()
-                ->onDelete('cascade');
 
             $table->integer('experience_min')->default(0);
             $table->unsignedTinyInteger('gender')->nullable();

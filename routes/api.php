@@ -110,7 +110,7 @@ Route::prefix('resumes')->controller(ResumeController::class)->group(function ()
     Route::get('{resume}/languages ', 'languages');
     Route::get('{resume}', 'show');
     Route::put('{resume}', 'update');
-   
+
 });
 
 Route::apiResource('levels', LevelController::class);
@@ -135,6 +135,13 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('languages', LanguageController::class);
 
 Route::apiResource('needs', NeedController::class);
+
+
+Route::prefix('needs')->controller(NeedController::class)->group(function(){
+    Route::get('{need}/resumes', 'resumes');
+});
+
+
 Route::apiResource('invitations', InvitationController::class);
 Route::apiResource('criteria-types', CriteriaTypeController::class);
 

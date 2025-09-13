@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Need;
+use App\Models\Resume;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,7 +14,7 @@ class NeedController extends Controller
     // GET /api/needs
     public function index()
     {
-        $needs = Need::with(['service', 'responsible', 'level', 'skills'])->latest()->get();
+        $needs = Need::with(['service', 'responsible', 'levels', 'skills'])->latest()->get();
         return response()->json($needs);
     }
 
@@ -22,9 +24,9 @@ class NeedController extends Controller
         $validator = Validator::make($request->all(), [
             'service_id'     => 'required|exists:services,id',
             'responsible_id' => 'required|exists:users,id',
-            'level_id'     => 'required|exists:levels,id',
+            'levels'     => 'nullable|array',
             'experience_min' => 'required|integer|min:0',
-            'gender'         => 'required|integer',
+            'gender'         => 'nullable|integer',
             'min_age'        => 'required|integer|min:0',
             'max_age'        => 'required|integer|gte:min_age',
             'description'    => 'nullable|string',
@@ -55,13 +57,19 @@ class NeedController extends Controller
             $need->skills()->attach($request->skills);
         }
 
-        return response()->json($need->load(['service', 'responsible', 'level', 'skills']), 201);
+        if ($request->has('levels')) {
+            $need->levels()->attach($request->levels);
+        }
+
+        $this->generateList($need->id);
+
+        return response()->json($need->load(['service', 'responsible', 'levels', 'skills']), 201);
     }
 
     // GET /api/needs/{id}
     public function show($id)
     {
-        $need = Need::with(['service', 'responsible', 'level', 'skills'])->find($id);
+        $need = Need::with(['service', 'responsible', 'levels', 'skills'])->find($id);
 
         if (!$need) {
             return response()->json(['message' => 'Need not found'], 404);
@@ -129,5 +137,87 @@ class NeedController extends Controller
         $need->delete();
 
         return response()->json(['message' => 'Need deleted successfully']);
+    }
+
+
+    function getAgeInMonths($birthDate)
+    {
+        $birth = Carbon::parse($birthDate);
+        $now = Carbon::now();
+        $months = $birth->diffInMonths($now);
+        return $months;
+    }
+
+
+    public function generateList($need_id)
+    {
+        // Load need with relationships in one query
+        $need = Need::with(['levels', 'skills', 'resumes'])->findOrFail($need_id);
+
+        // Get required IDs upfront
+        $requiredLevelIds = $need->levels->pluck('id')->toArray();
+        $requiredSkillIds = $need->skills->pluck('id')->toArray();
+
+        // Build the query step by step
+        $query = Resume::with(['levels']);
+
+
+        // Apply level filter only if levels are required
+        if (!empty($requiredLevelIds)) {
+            $query->whereHas('levels', function ($q) use ($requiredLevelIds) {
+                $q->whereIn('levels.id', $requiredLevelIds);
+            });
+        }
+
+        // \Log::alert($query->get());
+
+        // Apply skill filter only if skills are required
+        if (!empty($requiredSkillIds)) {
+            $query->whereHas('skills', function ($q) use ($requiredSkillIds) {
+                $q->whereIn('skills.id', $requiredSkillIds);
+            });
+        }
+
+        // Apply gender filter
+        if (!empty($need->gender)) {
+            $query->where('gender', $need->gender);
+        }
+
+        // Apply age range filter
+        if ($need->min_age && $need->max_age) {
+            $maxBirthDate = Carbon::now()->subYears($need->min_age)->toDateString();
+            $minBirthDate = Carbon::now()->subYears($need->max_age)->toDateString();
+
+            $query->whereBetween('birth_date', [$minBirthDate, $maxBirthDate]);
+        }
+
+        // Apply experience filter
+        if ($need->experience_min) {
+            $query->where('experience_monthe', '>=', $need->experience_min);
+        }
+
+        // Execute query
+        $matchingResumes = $query->get();
+
+        // Efficiently attach only new resumes to avoid duplicates
+        if ($matchingResumes->isNotEmpty()) {
+            $existingResumeIds = $need->resumes->pluck('id')->toArray();
+            $newResumeIds = $matchingResumes->pluck('id')->diff($existingResumeIds)->toArray();
+
+            if (!empty($newResumeIds)) {
+                $need->resumes()->attach($newResumeIds);
+            }
+        }
+
+        return $matchingResumes;
+    }
+
+
+
+
+    public function resumes(Need $need){
+
+        $need->load(['service', 'responsible', 'levels', 'skills', 'resumes']);
+        return response()->json($need);
     }
 }
