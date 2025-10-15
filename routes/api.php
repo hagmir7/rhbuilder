@@ -139,6 +139,7 @@ Route::apiResource('needs', NeedController::class);
 
 Route::prefix('needs')->controller(NeedController::class)->group(function(){
     Route::get('{need}/resumes', 'resumes');
+     Route::post('{need}/update-status', 'updateStatus');
 });
 
 

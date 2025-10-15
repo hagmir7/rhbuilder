@@ -12,11 +12,19 @@ use Illuminate\Support\Facades\Validator;
 class NeedController extends Controller
 {
     // GET /api/needs
-    public function index()
+   public function index(Request $request)
     {
-        $needs = Need::with(['service', 'responsible', 'levels', 'skills'])->latest()->get();
+        $needs = Need::with(['service', 'responsible', 'levels', 'skills']);
+
+        if (intval($request->status) > 0) {
+            $needs->where("status", intval($request->status));
+        }
+
+        $needs = $needs->latest()->get(); // assign the result
+
         return response()->json($needs);
     }
+
 
     // POST /api/needs
     public function store(Request $request)
@@ -228,18 +236,33 @@ class NeedController extends Controller
 
         $need->resumes->transform(function ($resume) {
             if ($resume->levels->isNotEmpty()) {
-                // Keep only the level with the highest coefficient
                 $resume->top_level = $resume->levels->sortByDesc('coefficient')->first();
             } else {
                 $resume->top_level = null;
             }
-
-            // Optionally remove the original levels collection
             unset($resume->levels);
 
             return $resume;
         });
 
         return response()->json($need);
+    }
+
+    public function updateStatus(Need $need, Request $request)
+    {
+        $validator = validator()->make($request->all(), [
+            'status' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $need->update([
+            "status" => $request->status
+        ]);
     }
 }
