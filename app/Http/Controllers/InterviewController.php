@@ -78,7 +78,8 @@ class InterviewController extends Controller
             'resume:id,full_name,email,phone,birth_date',
             'post',
             'responsible:id,name,full_name',
-            'criteria:id,code,description'
+            'criteria:id,code,description,criteria_type_id',
+            'criteria.criteriaType'
         );
         return response()->json($interview, 200);
     }
@@ -121,6 +122,50 @@ class InterviewController extends Controller
 
         return response()->json(null, 204);
     }
+
+    public function updateType(Interview $interview,  Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'type'        => 'required|integer'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors'  => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $interview->update([
+            'type' => $request->type
+        ]);
+
+        return response()->json(['message' => "Type édité avec succès", 200]);
+    }
+
+    public function updateDecision(Interview $interview,  Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'decision'        => 'required|integer'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors'  => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $interview->update([
+            'decision' => $request->decision
+        ]);
+
+        return response()->json(['message' => "Decision édité avec succès", 200]);
+    }
+
+
 
 
     public function evaluateCriteria(Interview $interview, Request $request)

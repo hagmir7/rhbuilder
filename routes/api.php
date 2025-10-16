@@ -139,7 +139,7 @@ Route::apiResource('needs', NeedController::class);
 
 Route::prefix('needs')->controller(NeedController::class)->group(function(){
     Route::get('{need}/resumes', 'resumes');
-     Route::post('{need}/update-status', 'updateStatus');
+    Route::post('{need}/update-status', 'updateStatus');
 });
 
 
@@ -151,7 +151,10 @@ Route::apiResource('templates', TemplateController::class);
 
 Route::apiResource('interviews', InterviewController::class);
 Route::prefix('interviews')->controller(InterviewController::class)->group(function(){
+    
     Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
+    Route::post('update-type/{interview}', 'updateType');
+    Route::post('update-decision/{interview}', 'updateDecision');
 });
 
 
