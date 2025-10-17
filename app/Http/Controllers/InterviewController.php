@@ -73,13 +73,13 @@ class InterviewController extends Controller
     public function show(Interview $interview)
     {
         $interview->load(
-            'template.criteria:id,code,description',
+            'template.criteria:id,code,description,criteria_type_id',
             'template:id,code,name',
             'resume:id,full_name,email,phone,birth_date',
             'post',
             'responsible:id,name,full_name',
-            'criteria:id,code,description,criteria_type_id',
-            'criteria.criteriaType'
+            'criteria:id,code,description',
+            'template.criteria.criteriaType'
         );
         return response()->json($interview, 200);
     }

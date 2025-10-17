@@ -15,7 +15,8 @@ class Interview extends Model
         'date',
         'type',
         'company_id',
-        'decision'
+        'decision',
+        'invitation_id'
     ];
 
     protected static function booted()

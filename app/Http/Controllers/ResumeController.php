@@ -139,6 +139,18 @@ class ResumeController extends Controller
         return $resume->languages;
     }
 
+    public function delete(Resume $resume)
+    {
+        if (!auth()->user()->hasRole('admin')) {
+            return response()->json(['message' => '401 Unauthorized'], 401);
+        }
+
+        $resume->delete();
+
+        return response()->json(['message' => 'CV supprimé avec succès'], 200);
+    }
+
+
 
     public function update(Request $request, $id)
     {

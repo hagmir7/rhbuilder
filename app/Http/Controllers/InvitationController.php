@@ -38,6 +38,26 @@ class InvitationController extends Controller
         return response()->json($invitation, 201);
     }
 
+    public function UpdateStatus(Request $request, Invitation $invitation){
+         $validator = Validator::make($request->all(), [
+            'status' => ['required', new Enum(InvitationStatus::class)],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $invitation->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['message' => "Statut de l’invitation modifié avec succès."]);
+
+    }
+
     public function show(Invitation $invitation)
     {
         $invitation->load('resume');
@@ -56,7 +76,10 @@ class InvitationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'errors' => $validator->errors(),
+                'message' => $validator->errors()->first()
+            ], 422);
         }
 
         $invitation->update($validator->validated());
