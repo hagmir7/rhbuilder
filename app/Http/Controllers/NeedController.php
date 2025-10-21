@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class NeedController extends Controller
 {
@@ -329,5 +330,15 @@ class NeedController extends Controller
         );
 
         return response()->json($invitation, 201);
+    }
+
+
+
+    public function download(Need $need)
+    {
+
+        return Pdf::view('need.pdf', [
+            'need' => $need
+        ])->format('a4')->name('grille-evaluation.pdf');
     }
 }

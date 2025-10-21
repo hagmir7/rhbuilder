@@ -146,6 +146,7 @@ Route::prefix('needs')->controller(NeedController::class)->group(function(){
     Route::post('{need}/resumes/order', 'updateOrder');
     Route::delete('resume/{need_resume}/delete', 'deleteResume');
     Route::post('invitation/create', 'createNeedInvitation');
+    Route::get('{need}/download', 'download');
 });
 
 
