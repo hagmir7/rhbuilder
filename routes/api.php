@@ -111,7 +111,9 @@ Route::prefix('resumes')->controller(ResumeController::class)->group(function ()
     Route::get('{resume}', 'show');
     Route::put('{resume}', 'update');
     Route::delete('{resume}', 'delete');
-
+    Route::get('{resume}/view', 'view');
+    Route::get('{resume}/interviews', 'interviews');
+    Route::get('{resume}/invitations', 'invitations');
 });
 
 Route::apiResource('levels', LevelController::class);
@@ -142,7 +144,8 @@ Route::prefix('needs')->controller(NeedController::class)->group(function(){
     Route::get('{need}/resumes', 'resumes');
     Route::post('{need}/update-status', 'updateStatus');
     Route::post('{need}/resumes/order', 'updateOrder');
-    Route::delete('resume/{need_resume}', 'deleteResume');
+    Route::delete('resume/{need_resume}/delete', 'deleteResume');
+    Route::post('invitation/create', 'createNeedInvitation');
 });
 
 
@@ -159,8 +162,8 @@ Route::apiResource('criteria-types', CriteriaTypeController::class);
 Route::apiResource('templates', TemplateController::class);
 
 Route::apiResource('interviews', InterviewController::class);
+
 Route::prefix('interviews')->controller(InterviewController::class)->group(function(){
-    
     Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
     Route::post('update-type/{interview}', 'updateType');
     Route::post('update-decision/{interview}', 'updateDecision');

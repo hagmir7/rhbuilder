@@ -224,4 +224,23 @@ class ResumeController extends Controller
 
         return response()->json($resumes, 200);
     }
+
+    public function view(Resume $resume){
+        $resume->load(['city', 'levels', 'languages', 'experiences', 'skills', 'workPost', 'category','languages.language']);
+        return $resume;
+    }
+
+
+    public function interviews(Resume $resume){
+        $resume->load(['interviews:id,code,responsible_id,resume_id,template_id,type,decision', 'interviews.responsible:id,full_name', 'interviews.template:id,code,name', 'city:id,name']);
+        return $resume;
+    }
+
+    public function invitations(Resume $resume){
+        $resume->load([
+            'invitations',
+            'city:id,name'
+        ]);
+        return $resume;
+    }
 }

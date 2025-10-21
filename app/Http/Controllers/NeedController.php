@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invitation;
 use App\Models\Need;
 use App\Models\NeedResume;
 use App\Models\Resume;
@@ -223,8 +224,6 @@ class NeedController extends Controller
     }
 
 
-
-
     public function resumes(Need $need)
     {
         $need->load([
@@ -236,7 +235,8 @@ class NeedController extends Controller
                 $query->orderBy('order');
             },
             'resumes.levels',
-            'resumes.city'
+            'resumes.city',
+            'resumes.invitations'
         ]);
 
         $need->resumes->transform(function ($resume) {
@@ -296,5 +296,38 @@ class NeedController extends Controller
     public function deleteResume(NeedResume $need_resume){
         $need_resume->delete();
         return response()->json(['message', 'CV supprimé avec succès']);
+    }
+
+
+
+    public function createNeedInvitation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'resume_id' => 'required|exists:resumes,id',
+            'need_id' => 'required|exists:needs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Create the invitation
+        $invitation = Invitation::create([
+            'resume_id' => $request->resume_id,
+        ]);
+
+
+        // Update or create NeedResume link
+        NeedResume::updateOrCreate(
+            [
+                'resume_id' => $request->resume_id,
+                'need_id'   => $request->need_id,
+            ],
+            [
+                'invitation_id' => $invitation->id,
+            ]
+        );
+
+        return response()->json($invitation, 201);
     }
 }

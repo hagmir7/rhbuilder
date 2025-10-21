@@ -78,6 +78,16 @@ class Resume extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function invitations(){
+        return $this->hasMany(Invitation::class);
+    }
+
+    public function interviews()
+    {
+        return $this->hasMany(Interview::class, 'resume_id', 'id');
+    }
+
+
 
     function daysToMonths($days) {
         $daysPerMonth = 30.44;

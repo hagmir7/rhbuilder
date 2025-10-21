@@ -35,7 +35,7 @@ class Need extends Model
     }
 
     public function resumes(){
-        return $this->belongsToMany(Resume::class, 'need_resume');
+        return $this->belongsToMany(Resume::class, 'need_resume')->withPivot('resume_id', 'need_id', 'invitation_id');
     }
 
 }

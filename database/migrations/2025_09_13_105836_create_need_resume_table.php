@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resume_id')->constrained()->cascadeOnDelete();
             $table->foreignId('need_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('invitation_id')->nullable()->constrained()->cascadeOnDelete();
             $table->integer('order')->nullable();
             $table->timestamps();
         });
