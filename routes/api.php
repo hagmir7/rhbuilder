@@ -167,6 +167,7 @@ Route::prefix('interviews')->controller(InterviewController::class)->group(funct
     Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
     Route::post('update-type/{interview}', 'updateType');
     Route::post('update-decision/{interview}', 'updateDecision');
+    Route::get('{interview}/download', 'download');
 });
 
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Interview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class InterviewController extends Controller
 {
@@ -195,5 +196,14 @@ class InterviewController extends Controller
         $interview->load('template.criteria', 'resume', 'post', 'responsible', 'criteria');
 
         return response()->json($interview);
+    }
+
+    public function download(Interview $interview)
+    {
+        $interview->load(['resume']);
+
+        return Pdf::view('interview.pdf', [
+            'interview' => $interview
+        ])->format('a4')->name('grille-evaluation.pdf');
     }
 }

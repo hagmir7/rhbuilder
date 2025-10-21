@@ -61,5 +61,8 @@ class Interview extends Model
         return $this->belongsToMany(Criteria::class, 'interview_criteria')->withPivot('note');
     }
 
+
+
+
    
 }
