@@ -5,17 +5,21 @@ namespace App\Enums;
 enum InvitationStatus: int
 {
     case PENDING = 1;
-    case INTERVIEW_SCHEDULED = 2;
+    case PLANNED = 2;
     case MISSED_CALL = 3;
-    case DECLINED = 4;
+    case ARCHIVED = 4;
+    case EXPIRED = 5;
+    case CANCELD = 6;
 
     public function getLabel(): string
     {
         return match ($this) {
             self::PENDING => "En attente",
-            self::INTERVIEW_SCHEDULED => "Entretien planifié",
+            self::PLANNED => "Planifié",
             self::MISSED_CALL => "Appel manqué",
-            self::DECLINED => "Refusé",
+            self::ARCHIVED => "Archivé",
+            self::EXPIRED => "Expiré",
+            self::CANCELD => "Annulé",
         };
     }
 
