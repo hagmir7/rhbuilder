@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             DepartementSeeder::class,
             ResumeSeeder::class,
             CriteriaTypeSeeder::class,
+            ActivitySeeder::class
         ]);
     }
 }

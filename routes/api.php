@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\NeedController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
@@ -177,6 +178,9 @@ Route::apiResource('posts', PostController::class);
 
 Route::apiResource('integrations', IntegrationController::class);
 
+
+
+Route::apiResource('activities', ActivityController::class);
 
 
 
