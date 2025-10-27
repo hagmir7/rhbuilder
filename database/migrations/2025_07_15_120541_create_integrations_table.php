@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('intergrations', function (Blueprint $table) {
+        Schema::create('integrations', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
             $table->foreignId('resume_id')->constrained()->onDelete('cascade');
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->date('evaluation');
+            $table->foreignId('post_id')->nullable()->constrained()->onDelete('cascade');
+            $table->date('evaluation_date')->nullable();
+            $table->date('hire_date')->nullable();
             $table->foreignId('responsible_id')->nullable()->constrained('users')->nullOnDelete();
             $table->float('period')->default(0);
             $table->timestamps();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('intergrations');
+        Schema::dropIfExists('integrations');
     }
 };
