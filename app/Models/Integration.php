@@ -6,7 +6,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class Integration extends Model
 {
-    protected $fillable = ['code', 'resume_id', 'post_id', 'evaluation_date', 'hire_date', 'responsible_id', 'period'];
+    protected $fillable = [
+        'code',
+        'resume_id',
+        'post_id',
+        'evaluation_date',
+        'hire_date',
+        'responsible_id',
+        'period',
+        'status',
+        'interview_id'
+    ];
+
+    protected static function booted()
+    {
+        static::creating(function ($template) {
+            $nextId = (self::max('id') ?? 0) + 1;
+            $template->code = 'EM' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+        });
+    }
 
 
     public function resume()
@@ -28,4 +46,11 @@ class Integration extends Model
     {
         return $this->belongsToMany(Activity::class, 'integration_activity')->withPivot(['date']);
     }
+
+    public function interview()
+    {
+        return $this->belongsTo(interview::class);
+    }
+
+    
 }

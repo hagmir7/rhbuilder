@@ -9,6 +9,7 @@ use App\Http\Controllers\CriteriaTypeController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
 use App\Http\Controllers\ExperienceController;
+use App\Http\Controllers\IntegrationController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LanguageController;
@@ -173,6 +174,8 @@ Route::prefix('interviews')->controller(InterviewController::class)->group(funct
 
 
 Route::apiResource('posts', PostController::class);
+
+Route::apiResource('integrations', IntegrationController::class);
 
 
 

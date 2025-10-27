@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Interview;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,8 @@ return new class extends Migration
             $table->date('hire_date')->nullable();
             $table->foreignId('responsible_id')->nullable()->constrained('users')->nullOnDelete();
             $table->float('period')->default(0);
+            $table->integer('status')->default(0);
+            $table->foreignIdFor(Interview::class)->nullable();
             $table->timestamps();
         });
     }
