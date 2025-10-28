@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Invitation;
 use App\Models\Integration;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
