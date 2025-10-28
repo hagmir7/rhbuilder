@@ -3,27 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Integration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class IntegrationController extends Controller
 {
     /**
      * Display a listing of the integrations.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $integrations = Integration::with(['resume', 'post', 'responsible', 'interview'])
-            ->latest()
-            ->paginate(15);
+        $integrations = Integration::with(['resume', 'post', 'responsible', 'interview', 'activities']);
 
-        return response()->json([
-            'success' => true,
-            'data' => $integrations,
-        ]);
+        if ($request->filled('status')) {
+            $integrations->where('status', $request->status);
+        }
+
+        $integrations = $integrations->latest()->paginate(15);
+
+        return response()->json($integrations);
     }
+
 
     public function store(Request $request)
     {
@@ -52,12 +56,12 @@ class IntegrationController extends Controller
         $integration = Integration::create($data);
 
         // Attach activities with date in pivot
-        if (!empty($data['activities'])) {
-            $syncData = [];
+        if (isset($data['activities'])) {
             foreach ($data['activities'] as $activity) {
-                $syncData[$activity['id']] = ['date' => $activity['date'] ?? null];
+                $integration->activities()->syncWithoutDetaching([
+                    $activity['activity_id'] => ['date' => $activity['date']],
+                ]);
             }
-            $integration->activities()->sync($syncData);
         }
 
         return response()->json([
@@ -69,10 +73,7 @@ class IntegrationController extends Controller
 
     public function show(Integration $integration)
     {
-        return response()->json([
-            'success' => true,
-            'data' => $integration->load(['resume', 'post', 'responsible', 'interview', 'activities']),
-        ]);
+        return response()->json($integration->load(['resume', 'post', 'responsible', 'interview', 'activities']));
     }
 
     public function update(Request $request, Integration $integration)
@@ -131,5 +132,20 @@ class IntegrationController extends Controller
             'success' => true,
             'message' => 'Integration deleted successfully.',
         ]);
+    }
+
+    public function download(Integration $integration)
+    {
+        $integration->load(['resume', 'post', 'responsible', 'activities']);
+
+        // Fetch all activities (not only those linked)
+        $allActivities = Activity::all();
+
+        return Pdf::view('integration.pdf', [
+            'integration' => $integration,
+            'allActivities' => $allActivities,
+        ])
+            ->format('a4')
+            ->name('grille-evaluation.pdf');
     }
 }

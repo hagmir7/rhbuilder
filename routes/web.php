@@ -8,6 +8,6 @@ Route::get('/', function () {
 });
 
 
-Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
+
 
 // return view('print.pdf', ['pdfUrl' => asset('storage/updated.pdf')]);

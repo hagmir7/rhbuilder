@@ -15,6 +15,7 @@ use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResumeController;
@@ -178,9 +179,18 @@ Route::apiResource('posts', PostController::class);
 
 Route::apiResource('integrations', IntegrationController::class);
 
+Route::apiResource('integrations', IntegrationController::class);
 
+Route::prefix('integrations')->controller(IntegrationController::class)->group(function(){
+    Route::get('{integration}/download', 'download');
+});
 
 Route::apiResource('activities', ActivityController::class);
+
+
+
+
+Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
 
 
 
