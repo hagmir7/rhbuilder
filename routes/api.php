@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\NeedController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
@@ -191,6 +192,8 @@ Route::apiResource('activities', ActivityController::class);
 
 
 Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
+
+Route::get('calendar', [CalendarController::class, 'calendar']);
 
 
 
