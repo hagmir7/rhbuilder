@@ -50,7 +50,7 @@ class CalendarController extends Controller
             }
 
             $calendarData[$date][] = [
-                'id' => $invitation->id,
+                'id' => $invitation->resume->id,
                 'title' => optional($invitation->resume)->full_name ?? 'Invitation',
                 'priority' => 'invitation',
                 'completed' => false,
@@ -68,7 +68,7 @@ class CalendarController extends Controller
                 }
 
                 $calendarData[$evalDate][] = [
-                    'id' => $integration->id,
+                    'id' => $integration->resume->id,
                     'title' => optional($integration->resume)->full_name ?? 'Intégration',
                     'priority' => 'evaluation',
                     'completed' => false,
@@ -84,7 +84,7 @@ class CalendarController extends Controller
                 }
 
                 $calendarData[$hireDate][] = [
-                    'id' => $integration->id,
+                    'id' => $integration->resume->id,
                     'title' => optional($integration->resume)->full_name ?? 'Intégration',
                     'priority' => 'integration',
                     'completed' => false,
