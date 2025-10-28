@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
-    protected $fillable = ['name', 'years', 'coefficient'];
+    protected $fillable = ['name', 'years', 'coefficient', 'description'];
 
     public function resumes()
     {

@@ -9,11 +9,9 @@
 
     <!-- Header -->
     <div class="flex justify-between items-center border-b border-gray-400 pb-2 mb-4">
-        <div class="flex items-center gap-3">
-            <img src="{{ public_path('imgs/intercocina-logo.png') }}" alt="Logo" class="h-16">
-            <div class="text-center">
-                <h2 class="font-semibold text-blue-600 text-sm">Fiche de Recrutement</h2>
-            </div>
+        <div>
+            <img src="{{ public_path('imgs/intercocina-logo.png') }}" alt="Logo" class="w-28 mb-2">
+            <h1 class="text-lg font-semibold text-red-700 uppercase">Fiche de Recrutement</h1>
         </div>
 
         <table class="border border-gray-400 text-md">

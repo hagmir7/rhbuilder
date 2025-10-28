@@ -11,15 +11,16 @@ class LevelController extends Controller
 {
     public function index()
     {
-        return response()->json(Level::select('id', 'name', 'years', 'coefficient')->get());
+        return response()->json(Level::select('id', 'name', 'years', 'coefficient', 'description')->get());
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'years' => 'required|integer|min:1',
-            'coefficient' => 'required|integer|min:1',
+            'years' => 'required|integer|min:0',
+            'coefficient' => 'required|integer|min:0',
+            'description' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -44,8 +45,9 @@ class LevelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'years' => 'required|integer|min:1',
-            'coefficient' => 'required|integer|min:1',
+            'years' => 'required|integer|min:0',
+            'coefficient' => 'required|integer|min:0',
+            'description' => 'required'
         ]);
 
         if ($validator->fails()) {
