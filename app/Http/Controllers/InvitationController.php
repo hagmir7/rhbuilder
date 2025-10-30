@@ -38,7 +38,7 @@ class InvitationController extends Controller
             ->when($request->filled('type'), fn($q) => $q->where('type', $request->type))
             ->when($request->filled('status'), fn($q) => $q->where('status', $request->status))
             ->when($request->filled('interview_date'), function ($q) use ($request) {
-                // normalize date input to Y-m-d format if valid
+                
                 $date = Carbon::parse($request->interview_date)->toDateString();
                 $q->whereDate('interview_date', $date);
             })

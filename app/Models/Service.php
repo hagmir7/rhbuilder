@@ -17,4 +17,10 @@ class Service extends Model
     public function responsible(){
         return $this->belongsTo(User::class, 'responsible_id');
     }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
+
+
 }

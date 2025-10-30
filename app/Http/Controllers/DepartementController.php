@@ -40,7 +40,9 @@ class DepartementController extends Controller
     // Display the specified departement
     public function show($id)
     {
-        $departement = Departement::with('services')->find($id);
+        $departement = Departement::with(['services' => function ($query) {
+            $query->withCount('posts');
+        }])->find($id);
 
         if (!$departement) {
             return response()->json(['message' => 'Departement not found'], 404);
