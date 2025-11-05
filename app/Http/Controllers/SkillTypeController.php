@@ -5,19 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Skill;
 use App\Models\SkillType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SkillTypeController extends Controller
 {
     public function index()
     {
-        return SkillType::all();
+        return SkillType::withCount('skills')->get();
     }
 
 
 
     public function show($id)
     {
-        return SkillType::with('skills')->findOrFail($id);
+        return SkillType::with('skills')->withCount('skills')->findOrFail($id);
     }
 
     public function store(Request $request)

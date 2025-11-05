@@ -10,7 +10,17 @@ class ResumeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Resume::with('city')->withCount('invitations')->withCount('interviews'); // Eager-load the city relationship
+        $query = Resume::with('city')->withCount('invitations')->withCount('interviews');
+
+        if ($request->filled('q') && $request->q != '') {
+            $query->where(function ($q) use ($request) {
+                $q->where('full_name', 'like', '%' . $request->q . '%')
+                    ->orWhere('email', 'like', '%' . $request->q . '%')
+                    ->orWhere('cin', 'like', '%' . $request->q . '%')
+                    ->orWhere('address', 'like', '%' . $request->q . '%')
+                    ->orWhere('phone', 'like', '%' . $request->q . '%');
+            });
+        }
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
