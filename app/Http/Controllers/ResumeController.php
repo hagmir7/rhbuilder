@@ -10,7 +10,7 @@ class ResumeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Resume::with('city'); // Eager-load the city relationship
+        $query = Resume::with('city')->withCount('invitations')->withCount('interviews'); // Eager-load the city relationship
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
