@@ -141,17 +141,22 @@ Route::apiResource('categories', CategoryController::class);
 
 Route::apiResource('languages', LanguageController::class);
 
-Route::apiResource('needs', NeedController::class);
 
 
 Route::prefix('needs')->controller(NeedController::class)->group(function(){
+    Route::get('overview', 'overview');
     Route::get('{need}/resumes', 'resumes');
     Route::post('{need}/update-status', 'updateStatus');
     Route::post('{need}/resumes/order', 'updateOrder');
     Route::delete('resume/{need_resume}/delete', 'deleteResume');
     Route::post('invitation/create', 'createNeedInvitation');
+    Route::post('invitations/bulk', 'createNeedBulkInvitation');
     Route::get('{need}/download', 'download');
+    
 });
+
+
+Route::apiResource('needs', NeedController::class);
 
 
 Route::apiResource('invitations', InvitationController::class);

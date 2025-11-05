@@ -44,7 +44,7 @@ class Integration extends Model
 
     public function activities()
     {
-        return $this->belongsToMany(Activity::class, 'integration_activity')->withPivot(['date']);
+        return $this->belongsToMany(Activity::class, 'integration_activity')->withPivot(['date', 'user_id']);
     }
 
     public function interview()

@@ -332,6 +332,45 @@ class NeedController extends Controller
         return response()->json($invitation, 201);
     }
 
+    public function createNeedBulkInvitation(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'resume_ids' => 'required|array',
+            'resume_ids.*' => 'exists:resumes,id',
+            'need_id' => 'required|exists:needs,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $needId = $request->need_id;
+        $createdInvitations = [];
+
+        foreach ($request->resume_ids as $resumeId) {
+
+            $invitation = Invitation::create([
+                'resume_id' => $resumeId,
+            ]);
+
+            NeedResume::create(
+                [
+                    'resume_id' => $resumeId,
+                    'need_id'   => $needId,
+                    'invitation_id' => $invitation->id,
+                ]
+            );
+
+            $createdInvitations[] = $invitation;
+        }
+
+        return response()->json([
+            'message' => 'Invitations created successfully.',
+            'data' => $createdInvitations
+        ], 201);
+    }
+
+
 
 
     public function download(Need $need)
@@ -340,5 +379,18 @@ class NeedController extends Controller
         return Pdf::view('need.pdf', [
             'need' => $need
         ])->format('a4')->name('grille-evaluation.pdf');
+    }
+
+
+    public function overview()
+    {
+        $overview = [
+            'pending' => Need::where('status', 1)->count(),
+            'in_progress' => Need::where('status', 2)->count(),
+            'cancelled' => Need::where('status', 3)->count(),
+            'executed' => Need::where('status', 4)->count(),
+        ];
+
+        return response()->json($overview);
     }
 }

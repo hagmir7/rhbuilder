@@ -41,7 +41,9 @@ class IntegrationController extends Controller
             'status' => ['required', 'integer'],
             'interview_id' => ['nullable', 'exists:interviews,id'],
             'activities' => ['array'],
-
+            'activities.*.activity_id' => ['required', 'exists:activities,id'],
+            'activities.*.date' => ['nullable', 'date'],
+            'activities.*.user_id' => ['nullable', 'exists:users,id'],
         ]);
 
         if ($validator->fails()) {
@@ -53,15 +55,20 @@ class IntegrationController extends Controller
 
         $data = $validator->validated();
 
+        // Create the integration record
         $integration = Integration::create($data);
 
-        // Attach activities with date in pivot
-        if (isset($data['activities'])) {
+        // Attach activities with date + user_id in pivot table
+        if (!empty($data['activities'])) {
+            $pivotData = [];
             foreach ($data['activities'] as $activity) {
-                $integration->activities()->syncWithoutDetaching([
-                    $activity['activity_id'] => ['date' => $activity['date']],
-                ]);
+                $pivotData[$activity['activity_id']] = [
+                    'date' => $activity['date'] ?? null,
+                    'user_id' => $activity['user_id'] ?? null,
+                ];
             }
+
+            $integration->activities()->syncWithoutDetaching($pivotData);
         }
 
         return response()->json([
@@ -70,6 +77,7 @@ class IntegrationController extends Controller
             'data' => $integration->load(['resume', 'post', 'responsible', 'interview', 'activities']),
         ], 201);
     }
+
 
     public function show(Integration $integration)
     {
@@ -88,6 +96,9 @@ class IntegrationController extends Controller
             'status' => ['sometimes', 'integer'],
             'interview_id' => ['nullable', 'exists:interviews,id'],
             'activities' => ['array'],
+            'activities.*.activity_id' => ['required', 'exists:activities,id'],
+            'activities.*.date' => ['nullable', 'date'],
+            'activities.*.user_id' => ['nullable', 'exists:users,id'],
         ]);
 
         if ($validator->fails()) {
@@ -97,20 +108,24 @@ class IntegrationController extends Controller
             ], 422);
         }
 
-        
-
         $data = $validator->validated();
 
+        // Update integration main fields
         $integration->update($data);
 
-        if (isset($data['activities'])) {
+        // Update related activities (pivot: date + user_id)
+        if (!empty($data['activities'])) {
+            $pivotData = [];
             foreach ($data['activities'] as $activity) {
-                $integration->activities()->syncWithoutDetaching([
-                    $activity['activity_id'] => ['date' => $activity['date']],
-                ]);
+                $pivotData[$activity['activity_id']] = [
+                    'date' => $activity['date'] ?? null,
+                    'user_id' => $activity['user_id'] ?? null,
+                ];
             }
-        }
 
+            // Sync existing activities while keeping others
+            $integration->activities()->syncWithoutDetaching($pivotData);
+        }
 
         return response()->json([
             'success' => true,
@@ -118,6 +133,7 @@ class IntegrationController extends Controller
             'data' => $integration->load(['resume', 'post', 'responsible', 'interview', 'activities']),
         ]);
     }
+
 
 
 

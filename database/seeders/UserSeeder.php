@@ -36,8 +36,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 1
             ]);
-            $user->assignRole("preparation");
-            $user->assignRole("controleur");
+
         }
 
         if (!User::where("email", "bayou@admin.com")->first()) {
@@ -51,7 +50,7 @@ class UserSeeder extends Seeder
                 'company_id' => 1,
 
             ]);
-            $user->assignRole("fabrication");
+       
         }
 
 
@@ -65,7 +64,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 1
             ]);
-            $user->assignRole("montage");
         }
 
         if (!User::where("email", "fatima@admin.com")->first()) {
@@ -78,7 +76,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 2
             ]);
-            $user->assignRole("preparation");
         }
 
         if (!User::where("email", "peinture@admin.com")->first()) {
@@ -91,7 +88,7 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 2
             ]);
-            $user->assignRole("fabrication");
+    
         }
 
 
@@ -105,7 +102,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 1
             ]);
-            $user->assignRole("preparation_trailer");
         }
 
         if (!User::where("email", "p2@admin.com")->first()) {
@@ -118,7 +114,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 1
             ]);
-            $user->assignRole("preparation_cuisine");
         }
 
         if (!User::where("email", "p3@admin.com")->first()) {
@@ -131,7 +126,6 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'company_id' => 2
             ]);
-            $user->assignRole("preparation_cuisine");
         }
     }
 }
