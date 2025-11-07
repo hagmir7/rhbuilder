@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('need_resume', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('resume_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('need_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('invitation_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('resume_id')->constrained()->onDelete('no action');
+            $table->foreignId('need_id')->constrained()->onDelete('no action');
+            $table->foreignId('invitation_id')->nullable()->onDelete('no action');
             $table->integer('order')->nullable();
             $table->timestamps();
         });

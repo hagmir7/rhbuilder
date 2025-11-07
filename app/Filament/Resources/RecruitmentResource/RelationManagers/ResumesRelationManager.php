@@ -33,7 +33,7 @@ class ResumesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('full_name')
                     ->searchable()
                     ->label(__("Nom complet")),
-                Tables\Columns\TextColumn::make('experience_monthe')
+                Tables\Columns\TextColumn::make('experience_month')
                     ->numeric()
                     ->sortable()
                     ->state(fn($record): int => $record->getExperience())

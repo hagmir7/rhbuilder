@@ -79,7 +79,7 @@ class SkillController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'skill_type_id' => 'nullable|exists:skill_types,id',
+            'skill_type_id' => 'required|exists:skill_types,id',
         ]);
 
         if ($validator->fails()) {

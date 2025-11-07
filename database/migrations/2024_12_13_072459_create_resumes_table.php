@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('full_name')->virtualAs('concat(first_name, \' \', last_name)');
+            $table->string('full_name')->storedAs("CONCAT(first_name, ' ', last_name)");
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
             $table->integer('marital_status')->nullable();
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('company_work_post_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
-            $table->integer('experience_monthe')->nullable();
+            $table->integer('experience_month')->nullable();
             $table->string('nationality')->default("Marocaine");
             $table->timestamps();
         });

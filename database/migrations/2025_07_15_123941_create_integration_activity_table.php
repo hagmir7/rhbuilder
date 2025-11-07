@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('integration_activity', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('integration_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('activity_id')->constrained()->onDelete('cascade');
+            $table->foreignId('integration_id')->constrained()->onDelete('no action');
+            $table->foreignId('user_id')->constrained()->onDelete('no action');
+            $table->foreignId('activity_id')->constrained()->onDelete('no action');
             $table->dateTime('date');
             $table->timestamps();
         });

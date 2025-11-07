@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('user_interview', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('interview_id')->constrained()->onDelete('cascade');
+            $table->foreignId('resume_id')
+                    ->constrained('resumes')
+                    ->onDelete('no action');  // Changed from cascade
+                
+                $table->foreignId('interview_id')
+                    ->constrained('interviews')
+                    ->onDelete('no action');  // Changed from cascade
+    
             $table->timestamps();
         });
     }

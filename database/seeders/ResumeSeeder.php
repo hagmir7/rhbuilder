@@ -8,7 +8,6 @@ use App\Models\Language;
 use App\Models\Level;
 use App\Models\Resume;
 use App\Models\Skill;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +18,10 @@ class ResumeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clear pivot tables first (safe for seeding)
+        DB::table('resume_skills')->truncate();
+        DB::table('resume_languages')->truncate();
+
         // Resume 1: Senior Developer
         $resume1 = Resume::create([
             'first_name' => 'Ahmed',
@@ -33,7 +36,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 2,
             'status' => 1,
             'user_id' => 1,
-            'experience_monthe' => 36,
+            'experience_month' => 36,
             'nationality' => 'Marocaine',
         ]);
 
@@ -63,7 +66,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 1,
             'status' => 1,
             'user_id' => 2,
-            'experience_monthe' => 48,
+            'experience_month' => 48,
             'nationality' => 'Marocaine',
         ]);
 
@@ -92,7 +95,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 3,
             'status' => 1,
             'user_id' => 3,
-            'experience_monthe' => 18,
+            'experience_month' => 18,
             'nationality' => 'Marocaine',
         ]);
 
@@ -120,7 +123,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 2,
             'status' => 1,
             'user_id' => 4,
-            'experience_monthe' => 60,
+            'experience_month' => 60,
             'nationality' => 'Marocaine',
         ]);
 
@@ -150,7 +153,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 4,
             'status' => 1,
             'user_id' => 5,
-            'experience_monthe' => 30,
+            'experience_month' => 30,
             'nationality' => 'Marocaine',
         ]);
 
@@ -178,7 +181,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 5,
             'status' => 1,
             'user_id' => 6,
-            'experience_monthe' => 24,
+            'experience_month' => 24,
             'nationality' => 'Marocaine',
         ]);
 
@@ -206,7 +209,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 6,
             'status' => 1,
             'user_id' => 7,
-            'experience_monthe' => 20,
+            'experience_month' => 20,
             'nationality' => 'Marocaine',
         ]);
 
@@ -234,7 +237,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 7,
             'status' => 1,
             'user_id' => 8,
-            'experience_monthe' => 72,
+            'experience_month' => 72,
             'nationality' => 'Marocaine',
         ]);
 
@@ -264,7 +267,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 2,
             'status' => 1,
             'user_id' => 9,
-            'experience_monthe' => 28,
+            'experience_month' => 28,
             'nationality' => 'Marocaine',
         ]);
 
@@ -292,7 +295,7 @@ class ResumeSeeder extends Seeder
             'city_id' => 8,
             'status' => 1,
             'user_id' => 1,
-            'experience_monthe' => 12,
+            'experience_month' => 12,
             'nationality' => 'Marocaine',
         ]);
 
@@ -324,19 +327,25 @@ class ResumeSeeder extends Seeder
     }
 
     /**
-     * Add random skills to a resume
+     * Add random skills to a resume (SQL Server Compatible)
      */
     private function addSkills($resumeId, $count = 3)
     {
         $skills = Skill::inRandomOrder()->take($count)->pluck('id');
         
         foreach ($skills as $skillId) {
-            DB::table('resume_skills')->insertOrIgnore([
-                'resume_id' => $resumeId,
-                'skill_id' => $skillId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Use insert instead of insertOrIgnore for SQL Server
+            try {
+                DB::table('resume_skills')->insert([
+                    'resume_id' => $resumeId,
+                    'skill_id' => $skillId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } catch (\Exception $e) {
+                // Ignore duplicate key errors
+                continue;
+            }
         }
     }
 
@@ -360,7 +369,7 @@ class ResumeSeeder extends Seeder
     }
 
     /**
-     * Add random languages to a resume
+     * Add random languages to a resume (SQL Server Compatible)
      */
     private function addLanguages($resumeId)
     {
@@ -370,6 +379,7 @@ class ResumeSeeder extends Seeder
             $randomLanguages = collect($languages)->random(rand(1, min(3, count($languages))));
             
             foreach ($randomLanguages as $languageId) {
+                // updateOrInsert is SQL Server compatible
                 DB::table('resume_languages')->updateOrInsert(
                     [
                         'resume_id' => $resumeId,
@@ -377,6 +387,8 @@ class ResumeSeeder extends Seeder
                     ],
                     [
                         'level' => rand(1, 6),
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
             }

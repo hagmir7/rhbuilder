@@ -15,11 +15,11 @@ return new class extends Migration
         Schema::create('integrations', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->foreignId('resume_id')->constrained()->onDelete('cascade');
+            $table->foreignId('resume_id')->constrained()->onDelete('no action');
             $table->foreignId('post_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('evaluation_date')->nullable();
             $table->date('hire_date')->nullable();
-            $table->foreignId('responsible_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('responsible_id')->nullable()->constrained('users')->onDelete('no action');
             $table->float('period')->default(0);
             $table->integer('status')->default(0);
             $table->foreignIdFor(Interview::class)->nullable();

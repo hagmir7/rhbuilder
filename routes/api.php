@@ -27,7 +27,6 @@ use App\Http\Controllers\SkillTypeController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
-use App\Models\Departement;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,12 +73,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/{id}/permissions', [UserPermissionController::class, 'getUserRolesAndPermissions']);
     Route::get('/user/{id}', [AuthController::class, 'show']);
 
+    Route::apiResource('levels', LevelController::class);
 
 
-});
+    Route::apiResource('departements', DepartementController::class);
+
+    Route::apiResource('services', ServiceController::class);
+
+    Route::apiResource('skills/type', SkillTypeController::class);
+
+    Route::apiResource('skills', SkillController::class);
+
+    Route::apiResource('companies', CompanyController::class);
 
 
-Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('cities', CityController::class);
+
+    Route::apiResource('categories', CategoryController::class);
+
+    Route::apiResource('languages', LanguageController::class);
 
     Route::post('diplomas', [DiplomaController::class, 'store']);
     Route::post('experiences ', [ExperienceController::class, 'store']);
@@ -87,9 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-
-
-    Route::prefix('skills')->controller(SkillController::class)->group(function(){
+    Route::prefix('skills')->controller(SkillController::class)->group(function () {
         Route::get('', 'index');
         Route::post('resume/store', 'resumeSkillStore');
     });
@@ -97,108 +107,75 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::prefix('languages')->controller(LanguageController::class)->group(function(){
+    Route::prefix('languages')->controller(LanguageController::class)->group(function () {
         Route::post('resume/store', 'resumeLanagueStore');
     });
 
+    Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
+        Route::get('', 'index');
+        Route::post('', 'store');
+        Route::get('list', 'list');
+        Route::get('{resume}/levels', 'levels');
+        Route::get('{resume}/experiences', 'experiences');
+        Route::get('{resume}/skills', 'skills');
+        Route::get('{resume}/languages ', 'languages');
+        Route::get('{resume}', 'show');
+        Route::put('{resume}', 'update');
+        Route::delete('{resume}', 'delete');
+        Route::get('{resume}/view', 'view');
+        Route::get('{resume}/interviews', 'interviews');
+        Route::get('{resume}/invitations', 'invitations');
+    });
 
+    Route::prefix('needs')->controller(NeedController::class)->group(function () {
+        Route::get('overview', 'overview');
+        Route::get('{need}/resumes', 'resumes');
+        Route::post('{need}/update-status', 'updateStatus');
+        Route::post('{need}/resumes/order', 'updateOrder');
+        Route::delete('resume/{need_resume}/delete', 'deleteResume');
+        Route::post('invitation/create', 'createNeedInvitation');
+        Route::post('invitations/bulk', 'createNeedBulkInvitation');
+        Route::get('{need}/download', 'download');
+    });
+    Route::apiResource('needs', NeedController::class);
+
+
+    Route::apiResource('invitations', InvitationController::class);
+    Route::prefix('invitations')->controller(InvitationController::class)->group(function () {
+        Route::put('update-status/{invitation}', 'UpdateStatus');
+    });
+
+
+
+    Route::apiResource('criteria-types', CriteriaTypeController::class);
+
+
+    Route::apiResource('templates', TemplateController::class);
+
+    Route::apiResource('interviews', InterviewController::class);
+
+    Route::prefix('interviews')->controller(InterviewController::class)->group(function () {
+        Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
+        Route::post('update-type/{interview}', 'updateType');
+        Route::post('update-decision/{interview}', 'updateDecision');
+        Route::get('{interview}/download', 'download');
+    });
+
+
+    Route::apiResource('posts', PostController::class);
+
+    Route::apiResource('integrations', IntegrationController::class);
+
+    Route::apiResource('integrations', IntegrationController::class);
+
+    Route::prefix('integrations')->controller(IntegrationController::class)->group(function () {
+        Route::get('{integration}/download', 'download');
+    });
+
+    Route::apiResource('activities', ActivityController::class);
+
+    Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
+
+    Route::get('calendar', [CalendarController::class, 'calendar']);
 });
-
-Route::prefix('resumes')->controller(ResumeController::class)->group(function () {
-    Route::get('', 'index');
-    Route::post('', 'store');
-    Route::get('list', 'list');
-    Route::get('{resume}/levels', 'levels');
-    Route::get('{resume}/experiences', 'experiences');
-    Route::get('{resume}/skills', 'skills');
-    Route::get('{resume}/languages ', 'languages');
-    Route::get('{resume}', 'show');
-    Route::put('{resume}', 'update');
-    Route::delete('{resume}', 'delete');
-    Route::get('{resume}/view', 'view');
-    Route::get('{resume}/interviews', 'interviews');
-    Route::get('{resume}/invitations', 'invitations');
-});
-
-Route::apiResource('levels', LevelController::class);
-
-
-Route::apiResource('departements', DepartementController::class);
-
-Route::apiResource('services', ServiceController::class);
-
-
-Route::apiResource('skills/type', SkillTypeController::class);
-
-Route::apiResource('skills', SkillController::class);
-
-Route::apiResource('companies', CompanyController::class);
-
-
-Route::apiResource('cities', CityController::class);
-
-Route::apiResource('categories', CategoryController::class);
-
-Route::apiResource('languages', LanguageController::class);
-
-
-
-Route::prefix('needs')->controller(NeedController::class)->group(function(){
-    Route::get('overview', 'overview');
-    Route::get('{need}/resumes', 'resumes');
-    Route::post('{need}/update-status', 'updateStatus');
-    Route::post('{need}/resumes/order', 'updateOrder');
-    Route::delete('resume/{need_resume}/delete', 'deleteResume');
-    Route::post('invitation/create', 'createNeedInvitation');
-    Route::post('invitations/bulk', 'createNeedBulkInvitation');
-    Route::get('{need}/download', 'download');
-    
-});
-
-
-Route::apiResource('needs', NeedController::class);
-
-
-Route::apiResource('invitations', InvitationController::class);
-Route::prefix('invitations')->controller(InvitationController::class)->group(function(){
-    Route::put('update-status/{invitation}', 'UpdateStatus');
-});
-
-
-
-Route::apiResource('criteria-types', CriteriaTypeController::class);
-
-
-Route::apiResource('templates', TemplateController::class);
-
-Route::apiResource('interviews', InterviewController::class);
-
-Route::prefix('interviews')->controller(InterviewController::class)->group(function(){
-    Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
-    Route::post('update-type/{interview}', 'updateType');
-    Route::post('update-decision/{interview}', 'updateDecision');
-    Route::get('{interview}/download', 'download');
-});
-
-
-Route::apiResource('posts', PostController::class);
-
-Route::apiResource('integrations', IntegrationController::class);
-
-Route::apiResource('integrations', IntegrationController::class);
-
-Route::prefix('integrations')->controller(IntegrationController::class)->group(function(){
-    Route::get('{integration}/download', 'download');
-});
-
-Route::apiResource('activities', ActivityController::class);
-
-
-
-
-Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
-
-Route::get('calendar', [CalendarController::class, 'calendar']);
-
-
 

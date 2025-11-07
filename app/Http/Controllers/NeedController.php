@@ -205,7 +205,7 @@ class NeedController extends Controller
 
         // Apply experience filter
         if ($need->experience_min) {
-            $query->where('experience_monthe', '>=', $need->experience_min);
+            $query->where('experience_month', '>=', $need->experience_min);
         }
 
         // Execute query
@@ -303,6 +303,8 @@ class NeedController extends Controller
 
     public function createNeedInvitation(Request $request)
     {
+        \Log::alert("ًWorking");
+        dd("");
         $validator = Validator::make($request->all(), [
             'resume_id' => 'required|exists:resumes,id',
             'need_id' => 'required|exists:needs,id',
@@ -353,10 +355,13 @@ class NeedController extends Controller
                 'resume_id' => $resumeId,
             ]);
 
-            NeedResume::create(
+            NeedResume::updateOrCreate(
                 [
                     'resume_id' => $resumeId,
                     'need_id'   => $needId,
+
+                ],
+                [
                     'invitation_id' => $invitation->id,
                 ]
             );

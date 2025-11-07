@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Invitation;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +17,10 @@ return new class extends Migration
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->foreignId('responsible_id')->constrained('users')->onDelete('cascade');
+            $table->foreignIdFor(User::class, 'responsible_id');
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('resume_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('post_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(Post::class, 'post_id')->nullable();
             $table->foreignId('template_id')->nullable()->constrained()->nullOnDelete();
             $table->dateTime('date')->nullable();
             $table->integer('type');

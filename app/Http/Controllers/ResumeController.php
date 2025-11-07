@@ -89,7 +89,7 @@ class ResumeController extends Controller
             'cover_letter_file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'user_id' => 'nullable|exists:users,id',
             'company_work_post_id' => 'nullable|exists:company_work_posts,id',
-            'experience_monthe' => 'nullable|integer',
+            'experience_month' => 'nullable|integer',
             'nationality' => 'nullable|string|max:100',
         ]);
 
@@ -180,7 +180,7 @@ class ResumeController extends Controller
             'cover_letter_file'  => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'user_id'            => 'nullable|exists:users,id',
             'company_work_post_id' => 'nullable|exists:company_work_posts,id',
-            'experience_monthe'  => 'nullable|integer',
+            'experience_month'  => 'nullable|integer',
             'nationality'        => 'nullable|string|max:100',
         ]);
 
