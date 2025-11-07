@@ -112,17 +112,17 @@ class Resume extends Model
         return round($this->daysToMonths($totalDays), 0);
     }
 
-    // protected static function booted()
-    // {
-    //     static::creating(function (Resume $resume) {
-    //         $resume->full_name = $resume->first_name . ' ' . $resume->last_name;
-    //     });
+    protected static function booted()
+    {
+        static::creating(function (Resume $resume) {
+            $resume->full_name = $resume->first_name . ' ' . $resume->last_name;
+        });
 
-    //     static::updating(function (Resume $resume) {
-    //         if ($resume->isDirty('first_name') || $resume->isDirty('last_name')) {
-    //             $resume->full_name = $resume->first_name . ' ' . $resume->last_name;
-    //         }
-    //     });
-    // }
+        static::updating(function (Resume $resume) {
+            if ($resume->isDirty('first_name') || $resume->isDirty('last_name')) {
+                $resume->full_name = $resume->first_name . ' ' . $resume->last_name;
+            }
+        });
+    }
 
 }
