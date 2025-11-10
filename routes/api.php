@@ -45,7 +45,7 @@ Route::get('/users', function () {
 
 Route::get('interviews/{interview}/download', [InterviewController::class, 'download']);
 Route::get('needs{need}/download', [NeedController::class, 'download']);
-Route::get('integrations/{integration}/download', [Integration::class, 'download']);
+Route::get('integrations/{integration}/download', [IntegrationController::class, 'download']);
 Route::get('/pdf', [PDFController::class, 'editAndPrintPDF']);
 
 
