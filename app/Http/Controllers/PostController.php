@@ -73,7 +73,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        $post->delete();
-        return response()->json(null, 204);
+        if (auth()->user()->hasRole('admin')) {
+            $post->delete();
+            return response()->json(['message' => 'Besoin supprimé avec succès']);
+        }
+
+        return response()->json(['message' => 'Non autorisé'], 403);
     }
 }

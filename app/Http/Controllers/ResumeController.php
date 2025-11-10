@@ -70,6 +70,8 @@ class ResumeController extends Controller
         return response()->json($resumes);
     }
 
+    
+
 
     public function store(Request $request)
     {
@@ -156,7 +158,6 @@ class ResumeController extends Controller
         }
 
         $resume->delete();
-
         return response()->json(['message' => 'CV supprimé avec succès'], 200);
     }
 
@@ -223,12 +224,12 @@ class ResumeController extends Controller
                     ->orWhere('phone', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
 
-                if ($request->filled('resume_id')) {  // use filled() to check it's not empty
+                if ($request->filled('resume_id')) { 
                     $q->orWhere("id", $request->input('resume_id'));
                 }
             });
         }
-        // Pagination (default 10 per page)
+
         $perPage = $request->input('per_page', 30);
         $resumes = $query->latest()->paginate($perPage);
 

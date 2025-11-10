@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Integration;
+use App\Models\IntegrationActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -12,9 +13,7 @@ use Spatie\LaravelPdf\Facades\Pdf;
 
 class IntegrationController extends Controller
 {
-    /**
-     * Display a listing of the integrations.
-     */
+
     public function index(Request $request)
     {
         $integrations = Integration::with(['resume', 'post', 'responsible', 'interview', 'activities']);
@@ -55,10 +54,10 @@ class IntegrationController extends Controller
 
         $data = $validator->validated();
 
-        // Create the integration record
+
         $integration = Integration::create($data);
 
-        // Attach activities with date + user_id in pivot table
+
         if (!empty($data['activities'])) {
             $pivotData = [];
             foreach ($data['activities'] as $activity) {
@@ -110,10 +109,9 @@ class IntegrationController extends Controller
 
         $data = $validator->validated();
 
-        // Update integration main fields
+
         $integration->update($data);
 
-        // Update related activities (pivot: date + user_id)
         if (!empty($data['activities'])) {
             $pivotData = [];
             foreach ($data['activities'] as $activity) {
@@ -123,7 +121,7 @@ class IntegrationController extends Controller
                 ];
             }
 
-            // Sync existing activities while keeping others
+
             $integration->activities()->syncWithoutDetaching($pivotData);
         }
 
@@ -136,25 +134,22 @@ class IntegrationController extends Controller
 
 
 
-
-    /**
-     * Remove the specified integration.
-     */
     public function destroy(Integration $integration)
     {
-        $integration->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Integration deleted successfully.',
-        ]);
+        if(auth()->user()->hasRole('admin') || auth()->id() == $integration->responsible_id){
+            IntegrationActivity::where('integration_id', $integration->id)->delete();
+            $integration->delete();
+            return response()->json(['message' => 'Besoin supprimé avec succès']);
+        }
+
+        return response()->json(['message' => 'Non autorisé'], 403);
     }
 
     public function download(Integration $integration)
     {
         $integration->load(['resume', 'post', 'responsible', 'activities']);
 
-        // Fetch all activities (not only those linked)
         $allActivities = Activity::all();
 
         return Pdf::view('integration.pdf', [

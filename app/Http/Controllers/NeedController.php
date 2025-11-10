@@ -15,7 +15,7 @@ use Spatie\LaravelPdf\Facades\Pdf;
 
 class NeedController extends Controller
 {
-    // GET /api/needs
+    
    public function index(Request $request)
     {
         $needs = Need::with(['service', 'responsible', 'levels', 'skills']);
@@ -24,13 +24,12 @@ class NeedController extends Controller
             $needs->where("status", intval($request->status));
         }
 
-        $needs = $needs->latest()->get(); // assign the result
+        $needs = $needs->latest()->get();
 
         return response()->json($needs);
     }
 
 
-    // POST /api/needs
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -78,7 +77,7 @@ class NeedController extends Controller
         return response()->json($need->load(['service', 'responsible', 'levels', 'skills']), 201);
     }
 
-    // GET /api/needs/{id}
+
     public function show($id)
     {
         $need = Need::with(['service', 'responsible', 'levels', 'skills'])->find($id);
@@ -90,7 +89,7 @@ class NeedController extends Controller
         return response()->json($need);
     }
 
-    // PUT/PATCH /api/needs/{id}
+
     public function update(Request $request, $id)
     {
         $need = Need::find($id);
@@ -167,39 +166,32 @@ class NeedController extends Controller
 
     public function generateList($need_id)
     {
-        // Load need with relationships in one query
+
         $need = Need::with(['levels', 'skills', 'resumes'])->findOrFail($need_id);
 
-        // Get required IDs upfront
+
         $requiredLevelIds = $need->levels->pluck('id')->toArray();
         $requiredSkillIds = $need->skills->pluck('id')->toArray();
 
-        // Build the query step by step
+
         $query = Resume::with(['levels']);
 
-
-        // Apply level filter only if levels are required
         if (!empty($requiredLevelIds)) {
             $query->whereHas('levels', function ($q) use ($requiredLevelIds) {
                 $q->whereIn('levels.id', $requiredLevelIds);
             });
         }
 
-        // \Log::alert($query->get());
-
-        // Apply skill filter only if skills are required
         if (!empty($requiredSkillIds)) {
             $query->whereHas('skills', function ($q) use ($requiredSkillIds) {
                 $q->whereIn('skills.id', $requiredSkillIds);
             });
         }
 
-        // Apply gender filter
         if (!empty($need->gender)) {
             $query->where('gender', $need->gender);
         }
 
-        // Apply age range filter
         if ($need->min_age && $need->max_age) {
             $maxBirthDate = Carbon::now()->subYears($need->min_age)->toDateString();
             $minBirthDate = Carbon::now()->subYears($need->max_age)->toDateString();
@@ -207,15 +199,14 @@ class NeedController extends Controller
             $query->whereBetween('birth_date', [$minBirthDate, $maxBirthDate]);
         }
 
-        // Apply experience filter
+
         if ($need->experience_min) {
             $query->where('experience_month', '>=', $need->experience_min);
         }
 
-        // Execute query
+
         $matchingResumes = $query->get();
 
-        // Efficiently attach only new resumes to avoid duplicates
         if ($matchingResumes->isNotEmpty()) {
             $existingResumeIds = $need->resumes->pluck('id')->toArray();
             $newResumeIds = $matchingResumes->pluck('id')->diff($existingResumeIds)->toArray();
@@ -281,7 +272,7 @@ class NeedController extends Controller
         $validated = $request->validate([
             'order' => 'required|array',
             'order.*.resume_id' => 'required|integer|exists:resumes,id',
-            'order.*.order' => 'required|integer|min:1', // changed from position
+            'order.*.order' => 'required|integer|min:1',
         ]);
 
         $need = Need::findOrFail($needId);
@@ -290,7 +281,7 @@ class NeedController extends Controller
             foreach ($validated['order'] as $item) {
                 $need->resumes()->updateExistingPivot(
                     $item['resume_id'],
-                    ['order' => $item['order']] // updated column
+                    ['order' => $item['order']] 
                 );
             }
         });
