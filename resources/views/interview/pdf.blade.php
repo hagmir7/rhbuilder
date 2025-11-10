@@ -94,13 +94,13 @@
                 <label class="flex items-center gap-2">
                     <span>Présentielle :</span>
                     <div class="w-4 h-4 border border-gray-600 flex items-center justify-center">
-                        @if($interview->type == 1) <span class="text-xs">X</span> @endif
+                        @if($interview->type == "1") <span class="text-xs">X</span> @endif
                     </div>
                 </label>
                 <label class="flex items-center gap-2">
                     <span>A distance :</span>
                     <div class="w-4 h-4 border border-gray-600 flex items-center justify-center">
-                        @if($interview->type == 2) <span class="text-xs">X</span> @endif
+                        @if($interview->type == "2") <span class="text-xs">X</span> @endif
                     </div>
                 </label>
             </div>
@@ -134,10 +134,10 @@
                     @endphp
                     <tr class="border-t border-gray-300 no-break">
                         <td class="p-1 border-r border-gray-300">{{ $item->description }}</td>
-                        <td class="border-r border-gray-300 text-center">@if($note === 1) X @endif</td>
-                        <td class="border-r border-gray-300 text-center">@if($note === 2) X @endif</td>
-                        <td class="border-r border-gray-300 text-center">@if($note === 3) X @endif</td>
-                        <td class="text-center">@if($note === 4) X @endif</td>
+                        <td class="border-r border-gray-300 text-center">@if($note === "1") X @endif</td>
+                        <td class="border-r border-gray-300 text-center">@if($note === "2") X @endif</td>
+                        <td class="border-r border-gray-300 text-center">@if($note === "3") X @endif</td>
+                        <td class="text-center">@if($note === "4") X @endif</td>
                     </tr>
                 @endforeach
             @endforeach
@@ -152,21 +152,21 @@
                 <label class="flex items-center gap-2">
                     <span>À retenir</span>
                     <div class="w-4 h-4 border border-gray-600 flex items-center justify-center">
-                        @if($interview->decision == 2) <span class="text-xs">X</span> @endif
+                        @if($interview->decision == "2") <span class="text-xs">X</span> @endif
                     </div>
                 </label>
 
                 <label class="flex items-center gap-2">
                     <span>Liste d’attente</span>
                     <div class="w-4 h-4 border border-gray-600 flex items-center justify-center">
-                        @if($interview->decision == 3) <span class="text-xs">X</span> @endif
+                        @if($interview->decision == "3") <span class="text-xs">X</span> @endif
                     </div>
                 </label>
 
                 <label class="flex items-center gap-2">
                     <span>À éliminer</span>
                     <div class="w-4 h-4 border border-gray-600 flex items-center justify-center">
-                        @if($interview->decision == 4) <span class="text-xs">X</span> @endif
+                        @if($interview->decision == "4") <span class="text-xs">X</span> @endif
                     </div>
                 </label>
             </div>
