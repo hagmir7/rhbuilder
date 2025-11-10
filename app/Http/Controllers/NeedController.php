@@ -136,19 +136,23 @@ class NeedController extends Controller
         return response()->json($need->load(['service', 'responsible', 'level', 'skills']));
     }
 
-    // DELETE /api/needs/{id}
     public function destroy($id)
     {
         $need = Need::find($id);
-
+        
         if (!$need) {
-            return response()->json(['message' => 'Need not found'], 404);
+            return response()->json(['message' => 'Besoin non trouvé'], 404);
         }
 
-        $need->skills()->detach();
-        $need->delete();
+        if(auth()->user()->hasRole('admin') || auth()->id() == $need->responsible_id){
+            NeedResume::where('need_id', $id)->delete();
+            $need->skills()->detach();
+            $need->delete();
 
-        return response()->json(['message' => 'Need deleted successfully']);
+            return response()->json(['message' => 'Besoin supprimé avec succès']);
+        }
+
+        return response()->json(['message' => 'Non autorisé'], 403);
     }
 
 
