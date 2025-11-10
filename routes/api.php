@@ -48,6 +48,7 @@ Route::get('needs{need}/download', [NeedController::class, 'download']);
 Route::get('integrations/{integration}/download', [Integration::class, 'download']);
 
 
+
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -140,7 +141,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('resume/{need_resume}/delete', 'deleteResume');
         Route::post('invitation/create', 'createNeedInvitation');
         Route::post('invitations/bulk', 'createNeedBulkInvitation');
-        Route::get('{need}/download', 'download');
+        
     });
     Route::apiResource('needs', NeedController::class);
 
