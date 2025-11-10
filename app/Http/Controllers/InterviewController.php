@@ -204,7 +204,11 @@ class InterviewController extends Controller
 
         return Pdf::view('interview.pdf', [
             'interview' => $interview
-        ])->format('a4')->name('grille-evaluation.pdf');
+        ])->format('a4')->name('grille-evaluation.pdf')->withBrowsershot(function ($browsershot) {
+            $browsershot
+                ->setNodeBinary('/home/admin1/.nvm/versions/node/v24.11.0/bin/node')
+                ->setNpmBinary('/home/admin1/.nvm/versions/node/v24.11.0/bin/npm');
+        });
     }
 
 
