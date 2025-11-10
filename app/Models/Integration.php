@@ -49,7 +49,7 @@ class Integration extends Model
 
     public function interview()
     {
-        return $this->belongsTo(interview::class);
+        return $this->belongsTo(Interview::class);
     }
 
     

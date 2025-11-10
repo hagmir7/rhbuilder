@@ -19,7 +19,10 @@ class Invitation extends Model
 
     protected $casts = [
         'type' =>  InvitationTypeEnum::class,
+         'interview_date' => 'datetime',
+         'date' => 'datetime',
     ];
+
 
 
     public function resume()

@@ -27,6 +27,7 @@ use App\Http\Controllers\SkillTypeController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPermissionController;
+use App\Models\Integration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,10 @@ Route::get('/user', function (Request $request) {
 Route::get('/users', function () {
     return User::all();
 });
+
+Route::get('interviews/{interview}/download', [InterviewController::class, 'download']);
+Route::get('needs{need}/download', [NeedController::class, 'download']);
+Route::get('integrations/{integration}/download', [Integration::class, 'download']);
 
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -158,7 +163,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('evaluate-criteria/{interview}', 'evaluateCriteria');
         Route::post('update-type/{interview}', 'updateType');
         Route::post('update-decision/{interview}', 'updateDecision');
-        Route::get('{interview}/download', 'download');
+
     });
 
 
@@ -169,7 +174,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('integrations', IntegrationController::class);
 
     Route::prefix('integrations')->controller(IntegrationController::class)->group(function () {
-        Route::get('{integration}/download', 'download');
+       
     });
 
     Route::apiResource('activities', ActivityController::class);
@@ -178,4 +183,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('calendar', [CalendarController::class, 'calendar']);
 });
+
+
 

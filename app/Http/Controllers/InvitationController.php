@@ -52,9 +52,9 @@ class InvitationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'date' => 'nullable|date',
+            'date' => 'nullable|date|date_format:Y-m-d H:i:s',
             'resume_id' => 'required|exists:resumes,id',
-            'interview_date' => 'nullable|date|after:now',
+            'interview_date' => 'nullable|date|after:now|date_format:Y-m-d H:i:s',
             'accepted' => 'nullable|boolean',
             'type' => ['nullable', new Enum(InvitationTypeEnum::class)],
             'status' => ['nullable', new Enum(InvitationStatus::class)],
