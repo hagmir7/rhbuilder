@@ -11,6 +11,6 @@ class Category extends Model
 
     public function resumes()
     {
-        return $this->belongsToMany(Resume::class);
+        return $this->hasMany(Resume::class);
     }
 }

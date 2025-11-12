@@ -7,6 +7,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\CriteriaTypeController;
 use App\Http\Controllers\DepartementController;
 use App\Http\Controllers\DiplomaController;
@@ -155,6 +156,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::apiResource('criteria-types', CriteriaTypeController::class);
+    Route::apiResource('criteria', CriteriaController::class);
 
 
     Route::apiResource('templates', TemplateController::class);

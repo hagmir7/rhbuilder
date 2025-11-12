@@ -10,7 +10,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return response()->json(Category::all());
+        return response()->json(Category::withCount('resumes')->get());
     }
 
     public function store(Request $request)
@@ -34,6 +34,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
+        $category->load('resumes');
         return response()->json($category);
     }
 

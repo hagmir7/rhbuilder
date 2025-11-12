@@ -25,6 +25,7 @@ class Resume extends Model
         'company_work_post_id',
         'marital_status',
         'experience_month',
+        'category_id',
         'birth_date',
         'gender',
         'cin',

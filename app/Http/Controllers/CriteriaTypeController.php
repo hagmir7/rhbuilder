@@ -13,7 +13,7 @@ class CriteriaTypeController extends Controller
      */
     public function index()
     {
-        return response()->json(CriteriaType::all(), 200);
+        return response()->json(CriteriaType::withCount('criteria')->get(), 200);
     }
 
     /**
