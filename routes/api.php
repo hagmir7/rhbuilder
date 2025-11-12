@@ -136,8 +136,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('needs')->controller(NeedController::class)->group(function () {
+        Route::post('{need}/add-resume', 'addResume');
         Route::get('overview', 'overview');
         Route::get('{need}/resumes', 'resumes');
+         Route::get('status/{status}', 'status');
         Route::post('{need}/update-status', 'updateStatus');
         Route::post('{need}/resumes/order', 'updateOrder');
         Route::delete('resume/{need_resume}/delete', 'deleteResume');

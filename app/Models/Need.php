@@ -14,7 +14,8 @@ class Need extends Model
         'min_age',
         'max_age',
         'status',
-        'description'
+        'description',
+        'code'
     ];
 
     public function service(){
@@ -36,6 +37,14 @@ class Need extends Model
 
     public function resumes(){
         return $this->belongsToMany(Resume::class, 'need_resume')->withPivot('resume_id', 'need_id', 'invitation_id');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($template) {
+            $nextId = (self::max('id') ?? 0) + 1;
+            $template->code = 'BE' . str_pad($nextId, 6, '0', STR_PAD_LEFT);
+        });
     }
 
 }

@@ -393,4 +393,19 @@ class NeedController extends Controller
 
         return response()->json($overview);
     }
+
+    public function status($status){
+        
+        return response()->json(Need::with('service:id,name')->where('status', $status)->get());
+    }
+
+
+    public function addResume(Request $request, Need $need)
+    {
+        if (auth()->user()->hasRole("admin")) {
+            $need->resumes()->syncWithoutDetaching([$request->resume_id]);
+            return ['message' => "Resume added successfully"];
+        }
+        return response()->json(['message' => 'unauthorized', 402]);
+    }
 }
